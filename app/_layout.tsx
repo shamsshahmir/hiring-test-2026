@@ -1,3 +1,25 @@
+// Polyfill WeakRef for Hermes (required by Zustand v5)
+if (typeof globalThis.WeakRef === 'undefined') {
+  // @ts-expect-error minimal polyfill
+  globalThis.WeakRef = class WeakRef<T extends object> {
+    private _target: T | undefined;
+    constructor(target: T) {
+      this._target = target;
+    }
+    deref(): T | undefined {
+      return this._target;
+    }
+  };
+}
+if (typeof globalThis.FinalizationRegistry === 'undefined') {
+  // @ts-expect-error minimal polyfill
+  globalThis.FinalizationRegistry = class FinalizationRegistry {
+    constructor() {}
+    register() {}
+    unregister() {}
+  };
+}
+
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { initAuthListener, useAuthStore } from '@/store/authStore';

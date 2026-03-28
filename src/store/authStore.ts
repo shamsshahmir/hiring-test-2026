@@ -4,10 +4,14 @@ import { getUser } from '@/services/firestore';
 import type { User } from '@/types/user';
 
 type AuthState = {
-  firebaseUser: import('@react-native-firebase/auth').FirebaseAuthTypes.User | null;
+  firebaseUser:
+    | import('@react-native-firebase/auth').FirebaseAuthTypes.User
+    | null;
   userProfile: User | null;
   isLoading: boolean;
-  setFirebaseUser: (user: import('@react-native-firebase/auth').FirebaseAuthTypes.User | null) => void;
+  setFirebaseUser: (
+    user: import('@react-native-firebase/auth').FirebaseAuthTypes.User | null,
+  ) => void;
   loadUserProfile: (uid: string) => Promise<void>;
   reset: () => void;
 };
@@ -33,7 +37,14 @@ export function initAuthListener(): () => void {
     const { setFirebaseUser, loadUserProfile, reset } = useAuthStore.getState();
     if (user) {
       setFirebaseUser(user);
-      await loadUserProfile(user.uid);
+      try {
+        await loadUserProfile(user.uid);
+      } catch (err) {
+        console.error('Failed to load user profile, signing out:', err);
+        // Stale session — sign out to force re-login with fresh credentials
+        await auth().signOut();
+        reset();
+      }
     } else {
       reset();
     }

@@ -15,7 +15,10 @@ export async function signUp(
   displayName: string,
   role: 'owner' | 'patient' = 'patient',
 ): Promise<void> {
-  const credential = await auth().createUserWithEmailAndPassword(email, password);
+  const credential = await auth().createUserWithEmailAndPassword(
+    email,
+    password,
+  );
   await credential.user.updateProfile({ displayName });
 
   // Write user doc to Firestore
@@ -54,5 +57,7 @@ export async function refreshAuthToken(): Promise<void> {
 // Whichever approach you choose, document WHY in DECISIONS.md.
 // The Firestore rule in seats/ is intentionally incomplete — your implementation goes there.
 export async function revokeUserSession(_userId: string): Promise<void> {
-  throw new Error('TODO [CHALLENGE]: Implement revokeUserSession via Cloud Function');
+  throw new Error(
+    'TODO [CHALLENGE]: Implement revokeUserSession via Cloud Function',
+  );
 }

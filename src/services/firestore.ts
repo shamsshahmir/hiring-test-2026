@@ -23,7 +23,7 @@ export function subscribeToClinic(
     .collection('clinics')
     .doc(clinicId)
     .onSnapshot((snap) => {
-      if (snap.exists()) {
+      if (snap.exists) {
         onUpdate({ id: snap.id, ...snap.data() } as Clinic);
       }
     });
@@ -33,7 +33,7 @@ export function subscribeToClinic(
 
 export async function getUser(userId: string): Promise<User | null> {
   const snap = await firestore().collection('users').doc(userId).get();
-  if (!snap.exists()) return null;
+  if (!snap.exists) return null;
   return { id: snap.id, ...snap.data() } as User;
 }
 
@@ -42,7 +42,7 @@ export async function getClinicMembers(clinicId: string): Promise<User[]> {
     .collection('users')
     .where('clinicId', '==', clinicId)
     .get();
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as User));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as User);
 }
 
 // --- Subscriptions ---
@@ -55,7 +55,7 @@ export function subscribeToSubscription(
     .collection('subscriptions')
     .doc(clinicId)
     .onSnapshot((snap) => {
-      if (snap.exists()) {
+      if (snap.exists) {
         onUpdate({ clinicId, ...snap.data() } as Subscription);
       }
     });
@@ -72,7 +72,9 @@ export function subscribeToClinicAppointments(
     .where('clinicId', '==', clinicId)
     .orderBy('datetime', 'asc')
     .onSnapshot((snap) => {
-      const appointments = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Appointment));
+      const appointments = snap.docs.map(
+        (d) => ({ id: d.id, ...d.data() }) as Appointment,
+      );
       onUpdate(appointments);
     });
 }
@@ -86,7 +88,9 @@ export function subscribeToPatientAppointments(
     .where('patientId', '==', patientId)
     .orderBy('datetime', 'asc')
     .onSnapshot((snap) => {
-      const appointments = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Appointment));
+      const appointments = snap.docs.map(
+        (d) => ({ id: d.id, ...d.data() }) as Appointment,
+      );
       onUpdate(appointments);
     });
 }
@@ -100,24 +104,33 @@ export async function getClinicAddons(clinicId: string): Promise<Addon[]> {
     .collection('items')
     .where('active', '==', true)
     .get();
-  return snap.docs.map((d) => ({ id: d.id, clinicId, ...d.data() } as Addon));
+  return snap.docs.map((d) => ({ id: d.id, clinicId, ...d.data() }) as Addon);
 }
 
 // --- Discounts ---
 
-export async function getClinicDiscounts(clinicId: string): Promise<Discount[]> {
+export async function getClinicDiscounts(
+  clinicId: string,
+): Promise<Discount[]> {
   // Fetch discounts referenced by the clinic's activeDiscounts array
-  const clinicSnap = await firestore().collection('clinics').doc(clinicId).get();
+  const clinicSnap = await firestore()
+    .collection('clinics')
+    .doc(clinicId)
+    .get();
   const clinic = clinicSnap.data() as Clinic;
   if (!clinic?.activeDiscounts?.length) return [];
 
   const discountDocs = await Promise.all(
     clinic.activeDiscounts.map((code) =>
-      firestore().collection('discounts').where('code', '==', code).limit(1).get(),
+      firestore()
+        .collection('discounts')
+        .where('code', '==', code)
+        .limit(1)
+        .get(),
     ),
   );
 
   return discountDocs
     .flatMap((snap) => snap.docs)
-    .map((d) => ({ id: d.id, ...d.data() } as Discount));
+    .map((d) => ({ id: d.id, ...d.data() }) as Discount);
 }

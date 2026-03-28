@@ -5,17 +5,37 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "clinicapp",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "ch.blackcode.clinictest"
     },
     "android": {
-      "package": "ch.blackcode.clinictest"
+      "package": "ch.blackcode.clinictest",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "@react-native-firebase/app",
-      "@stripe/stripe-react-native"
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "",
+          "enableGooglePay": false
+        }
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true

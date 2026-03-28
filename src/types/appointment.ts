@@ -1,6 +1,10 @@
 import { Timestamp } from '@react-native-firebase/firestore';
 
-export type AppointmentStatus = 'scheduled' | 'confirmed' | 'completed' | 'canceled';
+export type AppointmentStatus =
+  | 'scheduled'
+  | 'confirmed'
+  | 'completed'
+  | 'canceled';
 
 export type Appointment = {
   id: string;

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert,
+  View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Linking, Modal,
 } from 'react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { useClinic } from '@/hooks/useClinic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { getClinicAddons, getClinicDiscounts } from '@/services/firestore';
+import { createCheckoutSession } from '@/services/stripe';
 import { PlanBadge } from '@/components/PlanBadge';
 import { SeatUsageBar } from '@/components/SeatUsageBar';
 import { DiscountTag } from '@/components/DiscountTag';
-import { ADDON_CONFIG } from '@/types/subscription';
-import type { Addon } from '@/types/subscription';
+import { PLAN_CONFIG, ADDON_CONFIG } from '@/types/subscription';
+import type { Plan, Addon } from '@/types/subscription';
 import type { Discount } from '@/types/discount';
 
 export default function BillingScreen() {
@@ -19,6 +20,8 @@ export default function BillingScreen() {
   const { plan, status, config, seatsUsed, seatsMax } = useSubscription();
   const [addons, setAddons] = useState<Addon[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
+  const [showPlanPicker, setShowPlanPicker] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
 
   useEffect(() => {
     if (!clinic) return;
@@ -34,11 +37,31 @@ export default function BillingScreen() {
     );
   }
 
+  const upgradePlans = (['pro', 'premium', 'vip'] as const).filter(
+    (p) => PLAN_CONFIG[p].price > PLAN_CONFIG[plan].price,
+  );
+
+  async function handleSelectPlan(targetPlan: 'pro' | 'premium' | 'vip') {
+    if (!clinic) return;
+    setUpgrading(true);
+    setShowPlanPicker(false);
+    try {
+      const { url } = await createCheckoutSession({
+        clinicId: clinic.id,
+        plan: targetPlan,
+      });
+      if (url) {
+        await Linking.openURL(url);
+      }
+    } catch (err: any) {
+      Alert.alert('Upgrade failed', err.message ?? 'Something went wrong');
+    } finally {
+      setUpgrading(false);
+    }
+  }
+
   function handleUpgrade() {
-    // TODO [CHALLENGE]: Open Stripe Checkout via createCheckoutSession (stripe.ts)
-    // Navigate to a plan selection screen, then call createCheckoutSession.
-    // After checkout, Stripe webhook → Cloud Function → Firestore update.
-    Alert.alert('TODO', 'Implement Stripe Checkout (Scenario 1)');
+    setShowPlanPicker(true);
   }
 
   function handlePurchaseAddon(addonType: string) {
@@ -138,10 +161,46 @@ export default function BillingScreen() {
 
       {/* Upgrade CTA */}
       {plan !== 'vip' && (
-        <TouchableOpacity style={styles.upgradeButton} onPress={handleUpgrade}>
-          <Text style={styles.upgradeText}>Upgrade plan</Text>
+        <TouchableOpacity
+          style={[styles.upgradeButton, upgrading && { opacity: 0.5 }]}
+          onPress={handleUpgrade}
+          disabled={upgrading}
+        >
+          <Text style={styles.upgradeText}>
+            {upgrading ? 'Processing...' : 'Upgrade plan'}
+          </Text>
         </TouchableOpacity>
       )}
+
+      {/* Plan picker modal */}
+      <Modal visible={showPlanPicker} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Choose a plan</Text>
+            {upgradePlans.map((p) => (
+              <TouchableOpacity
+                key={p}
+                style={styles.planOption}
+                onPress={() => handleSelectPlan(p)}
+              >
+                <View>
+                  <Text style={styles.planOptionName}>{PLAN_CONFIG[p].label}</Text>
+                  <Text style={styles.planOptionSeats}>
+                    {PLAN_CONFIG[p].seats === Infinity ? 'Unlimited' : PLAN_CONFIG[p].seats} seats
+                  </Text>
+                </View>
+                <Text style={styles.planOptionPrice}>CHF {PLAN_CONFIG[p].price}/mo</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setShowPlanPicker(false)}
+            >
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -202,4 +261,32 @@ const styles = StyleSheet.create({
   upgradeText: { color: '#fff', fontSize: 16, fontWeight: '700' },
   restricted: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
   restrictedText: { fontSize: 16, color: '#6b7280', textAlign: 'center' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    paddingBottom: 40,
+    gap: 12,
+  },
+  modalTitle: { fontSize: 18, fontWeight: '700', color: '#111827', marginBottom: 4 },
+  planOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 10,
+  },
+  planOptionName: { fontSize: 16, fontWeight: '600', color: '#111827' },
+  planOptionSeats: { fontSize: 13, color: '#6b7280', marginTop: 2 },
+  planOptionPrice: { fontSize: 16, fontWeight: '700', color: '#3b82f6' },
+  cancelButton: { alignItems: 'center', padding: 14, marginTop: 4 },
+  cancelText: { fontSize: 16, color: '#6b7280', fontWeight: '600' },
 });

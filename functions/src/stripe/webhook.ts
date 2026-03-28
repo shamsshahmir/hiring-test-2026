@@ -1,10 +1,13 @@
-import * as functions from 'firebase-functions';
+import { onRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-09-30.acacia',
-});
+let _stripe: Stripe;
+function getStripe() {
+  if (!_stripe) _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  return _stripe;
+}
 
 const GRACE_PERIOD_DAYS = 7; // Document: chosen to match Stripe's own retry window
 
@@ -19,14 +22,14 @@ const GRACE_PERIOD_DAYS = 7; // Document: chosen to match Stripe's own retry win
  *   - invoice.payment_failed      → enter grace period (Scenario 4)
  *   - customer.subscription.deleted → cancel subscription, revert to Free
  */
-export const handleStripeWebhook = functions.https.onRequest(async (req, res) => {
+export const handleStripeWebhook = onRequest(async (req, res) => {
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.rawBody, sig!, webhookSecret);
+    event = getStripe().webhooks.constructEvent(req.rawBody, sig!, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     res.status(400).send('Webhook Error');
@@ -43,12 +46,14 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
         break;
       }
 
+      case 'customer.subscription.created':
       case 'customer.subscription.updated': {
         const sub = event.data.object as Stripe.Subscription;
         await handleSubscriptionUpdated(db, sub);
         break;
       }
 
+      case 'invoice.paid':
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice;
         await handlePaymentSucceeded(db, invoice);
@@ -57,16 +62,6 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
 
       case 'invoice.payment_failed': {
         // TODO [CHALLENGE]: Implement Scenario 4 — payment failure → grace period.
-        // Steps:
-        //   1. Look up the clinic by stripeCustomerId
-        //   2. Set subscription.status = 'grace_period'
-        //   3. Set subscription.gracePeriodEnd = now + GRACE_PERIOD_DAYS
-        //   4. Write to Firestore — Firestore rules will enforce restrictions automatically
-        //   5. Optionally: send a notification (email/push) to the owner
-        //
-        // Decision point: GRACE_PERIOD_DAYS is set to 7 above.
-        // Rationale: matches Stripe's Smart Retries window, so by the time grace ends,
-        // Stripe has already given up retrying.
         const invoice = event.data.object as Stripe.Invoice;
         console.log('TODO [CHALLENGE]: Handle payment failure for invoice', invoice.id);
         break;
@@ -74,9 +69,6 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
 
       case 'customer.subscription.deleted': {
         // TODO [CHALLENGE]: Handle subscription cancellation.
-        // Revert plan to 'free', status to 'canceled'.
-        // Deactivate seats exceeding free plan limit (1 seat).
-        // Owner keeps their seat; excess staff are deactivated.
         const sub = event.data.object as Stripe.Subscription;
         console.log('TODO [CHALLENGE]: Handle subscription deleted for', sub.id);
         break;
@@ -117,13 +109,12 @@ async function handleCheckoutCompleted(
       status: 'active',
       stripeCustomerId: session.customer,
       stripeSubscriptionId: session.subscription,
-      currentPeriodEnd: admin.firestore.Timestamp.fromDate(
-        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // ~1 month
+      currentPeriodEnd: Timestamp.fromDate(
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       ),
       gracePeriodEnd: null,
     }, { merge: true });
 
-    // Update clinic's plan mirror and seat max
     tx.update(clinicRef, {
       plan,
       'seats.max': planConfig.seats,
@@ -135,12 +126,25 @@ async function handleSubscriptionUpdated(
   db: admin.firestore.Firestore,
   stripeSubscription: Stripe.Subscription,
 ): Promise<void> {
-  // Find clinic by stripeSubscriptionId
-  const snap = await db
+  // Try finding by subscription ID first, then by customer ID (for new subscriptions)
+  let snap = await db
     .collection('subscriptions')
     .where('stripeSubscriptionId', '==', stripeSubscription.id)
     .limit(1)
     .get();
+
+  if (snap.empty) {
+    const customerId = typeof stripeSubscription.customer === 'string'
+      ? stripeSubscription.customer
+      : stripeSubscription.customer?.id;
+    if (customerId) {
+      snap = await db
+        .collection('subscriptions')
+        .where('stripeCustomerId', '==', customerId)
+        .limit(1)
+        .get();
+    }
+  }
 
   if (snap.empty) {
     console.warn('No clinic found for subscription', stripeSubscription.id);
@@ -150,10 +154,53 @@ async function handleSubscriptionUpdated(
   const subDoc = snap.docs[0];
   const clinicId = subDoc.id;
 
-  // Stripe stores the current plan in the subscription items
-  // TODO [CHALLENGE]: Parse the plan from stripeSubscription.items to determine the new plan
-  // and update Firestore accordingly. This is called on upgrades and downgrades.
-  console.log('TODO [CHALLENGE]: Sync subscription update for clinic', clinicId);
+  // Reverse-lookup: find which plan matches the price ID on the subscription
+  const PRICE_IDS: Record<string, string> = {
+    pro: 'price_1TFNdsKE5ra7Hrk1xtgF9wZ9',
+    premium: 'price_1TFNg2KE5ra7Hrk1gDnw2G5u',
+    vip: 'price_1TFNgrKE5ra7Hrk1vcprH34w',
+  };
+  const priceToPlan = Object.fromEntries(
+    Object.entries(PRICE_IDS).map(([plan, priceId]) => [priceId, plan]),
+  );
+
+  const planItem = stripeSubscription.items.data.find(
+    (item) => priceToPlan[item.price.id],
+  );
+
+  if (!planItem) {
+    console.warn('No recognizable plan price in subscription items for clinic', clinicId);
+    return;
+  }
+
+  const newPlan = priceToPlan[planItem.price.id] as 'pro' | 'premium' | 'vip';
+  const { PLAN_CONFIG_SERVER } = await import('./planConfig');
+  const planConfig = PLAN_CONFIG_SERVER[newPlan];
+
+  await db.runTransaction(async (tx) => {
+    const subRef = db.collection('subscriptions').doc(clinicId);
+    const clinicRef = db.collection('clinics').doc(clinicId);
+
+    // current_period_end can be seconds (number) or already a Date depending on Stripe API version
+    const periodEnd = stripeSubscription.current_period_end;
+    const periodEndDate = typeof periodEnd === 'number'
+      ? new Date(periodEnd > 1e12 ? periodEnd : periodEnd * 1000)
+      : new Date();
+
+    tx.update(subRef, {
+      plan: newPlan,
+      status: stripeSubscription.status === 'active' ? 'active' : subDoc.data()?.status,
+      stripeSubscriptionId: stripeSubscription.id,
+      currentPeriodEnd: Timestamp.fromDate(periodEndDate),
+    });
+
+    tx.update(clinicRef, {
+      plan: newPlan,
+      'seats.max': planConfig.seats,
+    });
+  });
+
+  console.log(`Subscription updated for clinic ${clinicId}: plan=${newPlan}, seats=${planConfig.seats}`);
 }
 
 async function handlePaymentSucceeded(
