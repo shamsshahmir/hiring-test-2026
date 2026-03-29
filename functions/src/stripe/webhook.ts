@@ -118,6 +118,21 @@ async function handleCheckoutCompleted(
       plan,
       'seats.max': planConfig.seats,
     });
+
+    // Increment discount usage now that payment is confirmed (deferred from session creation)
+    const usedDiscountCode = session.metadata?.discountCode;
+    if (usedDiscountCode) {
+      const discountSnap = await db
+        .collection('discounts')
+        .where('code', '==', usedDiscountCode)
+        .limit(1)
+        .get();
+      if (!discountSnap.empty) {
+        tx.update(discountSnap.docs[0].ref, {
+          usedCount: admin.firestore.FieldValue.increment(1),
+        });
+      }
+    }
   });
 }
 
@@ -173,8 +188,17 @@ async function handleSubscriptionUpdated(
   }
 
   const newPlan = priceToPlan[planItem.price.id] as 'pro' | 'premium' | 'vip';
-  const { PLAN_CONFIG_SERVER } = await import('./planConfig');
+  const { PLAN_CONFIG_SERVER, ADDON_SEATS_BONUS } = await import('./planConfig');
   const planConfig = PLAN_CONFIG_SERVER[newPlan];
+
+  // Count extra_seats add-on items on the subscription to calculate total seat max
+  const EXTRA_SEATS_PRICE = 'price_1TFNiwKE5ra7Hrk1Wg985hCC';
+  const extraSeatsCount = stripeSubscription.items.data.filter(
+    (item) => item.price.id === EXTRA_SEATS_PRICE,
+  ).length;
+  const totalSeatsMax = planConfig.seats === Infinity
+    ? Infinity
+    : planConfig.seats + (extraSeatsCount * ADDON_SEATS_BONUS);
 
   await db.runTransaction(async (tx) => {
     const subRef = db.collection('subscriptions').doc(clinicId);
@@ -209,7 +233,7 @@ async function handleSubscriptionUpdated(
 
     tx.update(clinicRef, {
       plan: newPlan,
-      'seats.max': planConfig.seats,
+      'seats.max': totalSeatsMax,
     });
   });
 
@@ -276,6 +300,13 @@ async function handleSubscriptionDeleted(
   const { PLAN_CONFIG_SERVER } = await import('./planConfig');
   const freePlanSeats = PLAN_CONFIG_SERVER.free.seats; // 1
 
+  // Deactivate all add-ons (free plan can't have add-ons)
+  const addonsSnap = await db
+    .collection('addons').doc(clinicId)
+    .collection('items')
+    .where('active', '==', true)
+    .get();
+
   // Auto-deactivate excess seats beyond free plan limit
   const seatsSnap = await db
     .collection('seats').doc(clinicId)
@@ -310,12 +341,18 @@ async function handleSubscriptionDeleted(
       gracePeriodEnd: null,
     });
 
-    // Update clinic plan and seats
+    // Update clinic plan, seats, and clear addons
     tx.update(clinicRef, {
       plan: 'free',
       'seats.max': freePlanSeats,
       'seats.used': Math.min(activeMembers.length, freePlanSeats),
+      addons: [],
     });
+
+    // Deactivate all add-ons
+    for (const addonDoc of addonsSnap.docs) {
+      tx.update(addonDoc.ref, { active: false });
+    }
 
     // Deactivate excess staff
     for (const member of toDeactivate) {

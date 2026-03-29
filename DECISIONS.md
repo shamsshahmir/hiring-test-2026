@@ -127,3 +127,83 @@
 **Why:** When a Subscription Schedule is created (or `cancel_at_period_end` is set), Stripe immediately fires `customer.subscription.updated` events — even though the plan hasn't changed yet. Our initial implementation blindly set `pendingDowngrade: null` on every subscription update, which wiped out the pending state milliseconds after we wrote it. The fix checks whether the new plan matches the pending target before clearing.
 
 **Trade-off:** If a user somehow gets into a state where `pendingDowngrade.targetPlan` never matches an incoming plan (e.g., the schedule is externally modified in Stripe), the field would never be cleared automatically. The `cancelPendingDowngrade` function serves as the manual escape hatch for this edge case.
+
+---
+
+## Scenario 3 — Add-on Purchase with Discount Interaction
+
+### Decision: All discount validation happens server-side in Cloud Functions
+
+**Choice:** The client sends the discount code as a plain string. The Cloud Function validates everything: existence, expiry, usage limit, and applicability to the item type. The client never evaluates discount rules.
+
+**Why:** Discount codes have financial impact. If validation ran client-side, a modified client could bypass expiry checks or apply base-plan-only discounts to add-ons. Server-side validation is the only safe approach. The client-side `calculateDiscountedPrice` function exists for UI display purposes only (showing estimated prices) — it's never trusted for actual billing.
+
+### Decision: Discount applicability is type-checked, not just boolean
+
+**Choice:** A discount has `appliesToBase: boolean` and `appliesToAddons: AddonType[] | 'all'`. When purchasing an add-on, the function checks whether the specific add-on type is in the `appliesToAddons` list. A discount with `appliesToBase: true, appliesToAddons: []` is explicitly rejected for add-on purchases with a clear error message explaining it only applies to the base plan.
+
+**Why:** The WELCOME20 discount (20% off base plan only) must NOT accidentally apply to add-on purchases. The type system makes this explicit — `appliesToAddons: []` means "no add-ons". The error message tells the user exactly why their code was rejected, reducing support tickets.
+
+### Decision: Expired discounts are rejected for new purchases, honored for existing subscribers
+
+**Choice:** If `validUntil < now`, the discount is rejected for any new purchase (upgrade or add-on). However, existing subscribers who applied the discount when it was valid keep their discounted rate until their subscription renews or the Stripe coupon's `duration_in_months` expires naturally.
+
+**Why:** Stripping a discount mid-cycle from an existing subscriber is legally questionable (they entered a contract at the discounted rate) and creates bad UX (surprise price increase). Letting Stripe's coupon duration handle the natural expiry is cleaner — when the coupon's 12-month period ends, the full price applies automatically. No server-side intervention needed.
+
+**Trade-off:** A subscriber who applied an add-on discount 11 months ago still gets 1 more month of discount even though the code expired. This is acceptable — the coupon duration is the contractual term, not the code's `validUntil` date.
+
+### Decision: Stripe coupons created per-use, not reused
+
+**Choice:** Each time a valid discount code is applied, we create a new Stripe coupon via `stripe.coupons.create()` rather than looking up an existing one.
+
+**Why:** Stripe coupons are immutable — you can't change their percentage after creation. If we reused coupons, we'd need a mapping table between our discount codes and Stripe coupon IDs. Creating per-use is simpler and avoids stale coupon references. Stripe handles coupon deduplication internally if needed.
+
+**Trade-off:** This creates many Stripe coupon objects over time. In production, we'd periodically clean up unused coupons via the Stripe API. For this implementation, the volume is negligible.
+
+### Decision: Stripe-first, Firestore-second with compensating rollback (same pattern as Scenario 2)
+
+**Choice:** The add-on purchase creates the Stripe subscription item FIRST, then writes the Firestore addon record + increments discount usage in a single transaction. If Firestore fails, we delete the Stripe subscription item and coupon as compensating rollback.
+
+**Why:** Same reasoning as Scenario 2. Stripe-first means if Firestore fails, we undo the charge — the user is never billed for something that isn't recorded. The alternative (Firestore-first) would leave a record of an add-on with no corresponding Stripe billing.
+
+### Decision: Discount usage count checked inside Firestore transaction
+
+**Choice:** The discount usage limit is re-checked inside the Firestore transaction (after the Stripe call), not just during the initial validation pass. The increment also happens inside the transaction.
+
+**Why:** Two concurrent requests could both pass the initial usage check (before Stripe calls), then both succeed with Stripe. The transaction re-check is the pessimistic guarantee — only one will succeed in incrementing past the limit. The losing request gets rolled back (Stripe item deleted).
+
+### Decision: Extra Seats add-on updates clinic.seats.max
+
+**Choice:** When the `extra_seats` add-on is purchased, the Firestore transaction also increments `clinic.seats.max` by `ADDON_SEATS_BONUS` (5). Other add-ons don't affect seat limits.
+
+**Why:** The Extra Seats pack's purpose is to increase capacity. Without updating `seats.max`, the Firestore rules would still block new staff additions at the plan's base limit. The increment is atomic within the same transaction as the addon record write.
+
+### Decision: Grace period blocks add-on purchases
+
+**Choice:** A clinic in `grace_period` status cannot purchase add-ons. The Cloud Function rejects with a clear error.
+
+**Why:** During grace period, the clinic's existing payment method has failed. Adding more billable items to a subscription with a failing payment method is counterproductive — Stripe would immediately try to charge the new item and fail again. The owner should resolve the payment issue first.
+
+### Decision: Discount usage deferred to webhook for checkout sessions
+
+**Choice:** When a discount code is used during plan upgrade (checkout session), the `usedCount` is NOT incremented when the session is created. Instead, the discount code is stored in the session's metadata, and the webhook handler (`handleCheckoutCompleted`) increments the count when payment actually succeeds.
+
+**Why:** Checkout sessions can be abandoned — the user creates a session, sees the Stripe payment page, and closes the browser. If we incremented on session creation, abandoned sessions would consume usage slots permanently. By deferring to the webhook, we only count successful payments.
+
+**Trade-off:** There's a brief window where concurrent requests could both create sessions with the same near-limit discount code (both pass the usage check, neither has incremented yet). In practice this is rare and the worst case is one extra use of a discount code. The alternative — a distributed lock across the session creation and eventual webhook — adds significant complexity for a negligible risk.
+
+**Note:** This differs from the `purchaseAddon` flow where payment is synchronous (Stripe subscription item is created immediately). There, we can safely increment in the same Firestore transaction because we know the Stripe charge succeeded.
+
+### Decision: Add-ons deactivated on subscription deletion
+
+**Choice:** When `handleSubscriptionDeleted` fires (downgrade to free or cancellation), all active add-ons are deactivated in the same transaction that reverts the plan.
+
+**Why:** A free plan cannot have add-ons. If we left add-ons active after reverting to free, the Firestore data would be inconsistent — the UI would show active add-ons on a plan that doesn't support them, and Stripe would have no corresponding billing items. Deactivating atomically in the same transaction prevents any inconsistent window.
+
+### Decision: Webhook accounts for Extra Seats add-ons when setting seats.max
+
+**Choice:** The `handleSubscriptionUpdated` webhook calculates `seats.max` as `planConfig.seats + (extraSeatsCount * ADDON_SEATS_BONUS)` by counting `extra_seats` price items on the Stripe subscription, rather than hardcoding `planConfig.seats`.
+
+**Why:** Adding a subscription item (add-on purchase) triggers `customer.subscription.updated`. If the webhook blindly set `seats.max = planConfig.seats`, it would overwrite the Extra Seats bonus that was just applied by the `purchaseAddon` function. By reading the actual subscription items from Stripe, the webhook always reflects the true seat entitlement.
+
+**Trade-off:** The webhook now depends on recognizing the Extra Seats price ID. If the price ID changes in Stripe, the webhook would under-count seats. This is mitigated by the same `PRICE_IDS` map used throughout the codebase.

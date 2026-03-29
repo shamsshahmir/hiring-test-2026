@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Linking, Modal,
+  View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Linking, Modal, TextInput,
 } from 'react-native';
 import { useAuth } from '@/hooks/useAuth';
 import { useClinic } from '@/hooks/useClinic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { getClinicAddons, getClinicDiscounts } from '@/services/firestore';
-import { createCheckoutSession, initiateDowngrade, cancelPendingDowngrade } from '@/services/stripe';
+import { createCheckoutSession, initiateDowngrade, cancelPendingDowngrade, purchaseAddon } from '@/services/stripe';
 import { PlanBadge } from '@/components/PlanBadge';
 import { SeatUsageBar } from '@/components/SeatUsageBar';
 import { DiscountTag } from '@/components/DiscountTag';
@@ -24,6 +24,10 @@ export default function BillingScreen() {
   const [showDowngradePicker, setShowDowngradePicker] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
   const [downgrading, setDowngrading] = useState(false);
+  const [addonModal, setAddonModal] = useState<string | null>(null);
+  const [discountInput, setDiscountInput] = useState('');
+  const [upgradeDiscountInput, setUpgradeDiscountInput] = useState('');
+  const [purchasingAddon, setPurchasingAddon] = useState(false);
 
   useEffect(() => {
     if (!clinic) return;
@@ -47,10 +51,12 @@ export default function BillingScreen() {
     if (!clinic) return;
     setUpgrading(true);
     setShowPlanPicker(false);
+    const code = upgradeDiscountInput.trim();
     try {
       const { url } = await createCheckoutSession({
         clinicId: clinic.id,
         plan: targetPlan,
+        ...(code ? { discountCode: code } : {}),
       });
       if (url) {
         await Linking.openURL(url);
@@ -63,6 +69,7 @@ export default function BillingScreen() {
   }
 
   function handleUpgrade() {
+    setUpgradeDiscountInput('');
     setShowPlanPicker(true);
   }
 
@@ -124,9 +131,28 @@ export default function BillingScreen() {
   }
 
   function handlePurchaseAddon(addonType: string) {
-    // TODO [CHALLENGE]: Call purchaseAddon from stripe.ts
-    // Remember: validate applicable discounts server-side (Scenario 3)
-    Alert.alert('TODO', `Implement add-on purchase for ${addonType} (Scenario 3)`);
+    setDiscountInput('');
+    setAddonModal(addonType);
+  }
+
+  async function confirmAddonPurchase() {
+    if (!clinic || !addonModal) return;
+    const addonType = addonModal as 'extra_storage' | 'extra_seats' | 'advanced_analytics';
+    setPurchasingAddon(true);
+    setAddonModal(null);
+    try {
+      await purchaseAddon({
+        clinicId: clinic.id,
+        addonType,
+        ...(discountInput.trim() ? { discountCode: discountInput.trim() } : {}),
+      });
+      Alert.alert('Success', `${ADDON_CONFIG[addonType].label} has been added.`);
+      getClinicAddons(clinic.id).then(setAddons);
+    } catch (err: any) {
+      Alert.alert('Purchase failed', err.message ?? 'Something went wrong');
+    } finally {
+      setPurchasingAddon(false);
+    }
   }
 
   return (
@@ -290,11 +316,56 @@ export default function BillingScreen() {
         </View>
       </Modal>
 
+      {/* Add-on purchase modal */}
+      <Modal visible={addonModal !== null} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              Add {addonModal ? ADDON_CONFIG[addonModal as keyof typeof ADDON_CONFIG]?.label : ''}
+            </Text>
+            <Text style={{ fontSize: 14, color: '#6b7280', marginBottom: 4 }}>
+              CHF {addonModal ? ADDON_CONFIG[addonModal as keyof typeof ADDON_CONFIG]?.price : 0}/mo
+            </Text>
+            <TextInput
+              style={styles.discountInput}
+              placeholder="Discount code (optional)"
+              placeholderTextColor="#9ca3af"
+              value={discountInput}
+              onChangeText={setDiscountInput}
+              autoCapitalize="characters"
+            />
+            <TouchableOpacity
+              style={[styles.upgradeButton, purchasingAddon && { opacity: 0.5 }]}
+              onPress={confirmAddonPurchase}
+              disabled={purchasingAddon}
+            >
+              <Text style={styles.upgradeText}>
+                {purchasingAddon ? 'Processing...' : 'Confirm purchase'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setAddonModal(null)}
+            >
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {/* Plan picker modal */}
       <Modal visible={showPlanPicker} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Choose a plan</Text>
+            <TextInput
+              style={styles.discountInput}
+              placeholder="Discount code (optional)"
+              placeholderTextColor="#9ca3af"
+              value={upgradeDiscountInput}
+              onChangeText={setUpgradeDiscountInput}
+              autoCapitalize="characters"
+            />
             {upgradePlans.map((p) => (
               <TouchableOpacity
                 key={p}
@@ -413,6 +484,15 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   downgradeText: { fontSize: 13, color: '#92400e', lineHeight: 18 },
+  discountInput: {
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 15,
+    color: '#111827',
+    backgroundColor: '#f9fafb',
+  },
   cancelDowngradeBtn: {
     marginTop: 8,
     alignSelf: 'flex-start',

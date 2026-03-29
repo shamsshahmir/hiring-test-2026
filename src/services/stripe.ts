@@ -37,15 +37,11 @@ export type AddonPurchaseParams = {
   discountCode?: string;
 };
 
-// TODO [CHALLENGE]: Implement add-on purchase (Scenario 3).
-// This calls the purchaseAddon Cloud Function.
-// Important: discount application must match the discount's appliesToAddons field.
-// A discount with appliesToBase: true, appliesToAddons: [] does NOT apply here.
-// Validate this server-side in the Cloud Function.
 export async function purchaseAddon(
-  _params: AddonPurchaseParams,
+  params: AddonPurchaseParams,
 ): Promise<void> {
-  throw new Error('TODO [CHALLENGE]: Implement purchaseAddon');
+  const fn = functions().httpsCallable('purchaseAddon');
+  await fn(params);
 }
 
 export type DowngradeParams = {

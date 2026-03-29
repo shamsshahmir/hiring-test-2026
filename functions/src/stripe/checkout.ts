@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 import Stripe from 'stripe';
 
 // Lazy-init: env vars aren't available during emulator analysis step
@@ -17,6 +18,12 @@ const PRICE_IDS: Record<string, string> = {
   extra_storage: 'price_1TFNiBKE5ra7Hrk1qjT3kdxx',
   extra_seats: 'price_1TFNiwKE5ra7Hrk1Wg985hCC',
   advanced_analytics: 'price_1TFNjlKE5ra7Hrk1kKLNdDrz',
+};
+
+const ADDON_PRICES: Record<string, number> = {
+  extra_storage: 19,
+  extra_seats: 49,
+  advanced_analytics: 79,
 };
 
 /**
@@ -66,13 +73,44 @@ export const createCheckoutSession = onCall(async (request) => {
     await subDoc.ref.set({ stripeCustomerId: customerId }, { merge: true });
   }
 
-  // TODO [CHALLENGE]: Validate and apply discount code (Scenario 3 & 5).
+  // Validate and apply discount code for base plan checkout
   let stripeCouponId: string | undefined;
   if (discountCode) {
-    console.log(
-      'TODO [CHALLENGE]: Validate and apply discount code:',
-      discountCode,
-    );
+    const discountSnap = await db
+      .collection('discounts')
+      .where('code', '==', discountCode)
+      .limit(1)
+      .get();
+
+    if (discountSnap.empty) {
+      throw new HttpsError('not-found', `Discount code "${discountCode}" not found`);
+    }
+
+    const discount = discountSnap.docs[0].data();
+    const validUntil = discount.validUntil?.toDate?.() ?? new Date(0);
+
+    if (validUntil <= new Date()) {
+      throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has expired`);
+    }
+    if (discount.usedCount >= discount.usageLimit) {
+      throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has reached its usage limit`);
+    }
+    if (!discount.appliesToBase) {
+      throw new HttpsError('failed-precondition', `Discount "${discountCode}" does not apply to base plan pricing`);
+    }
+
+    // Create Stripe coupon
+    const coupon = await getStripe().coupons.create({
+      percent_off: discount.percentOff,
+      duration: 'repeating',
+      duration_in_months: 12,
+      name: `${discountCode} - ${discount.percentOff}% off`,
+    });
+    stripeCouponId = coupon.id;
+
+    // NOTE: Usage count is NOT incremented here. Checkout sessions can be abandoned.
+    // The increment happens in the webhook (handleCheckoutCompleted) when payment succeeds.
+    // The discount code is passed via session metadata so the webhook can find it.
   }
 
   const session = await getStripe().checkout.sessions.create({
@@ -80,7 +118,7 @@ export const createCheckoutSession = onCall(async (request) => {
     mode: 'subscription',
     line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
     ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
-    metadata: { clinicId, plan },
+    metadata: { clinicId, plan, ...(discountCode ? { discountCode } : {}) },
     success_url: 'clinicapp://billing?success=true',
     cancel_url: 'clinicapp://billing?canceled=true',
   });
@@ -90,6 +128,15 @@ export const createCheckoutSession = onCall(async (request) => {
 
 /**
  * Purchases an add-on for a clinic.
+ *
+ * Strategy: Validate → Stripe-first → Firestore-second with compensating rollback.
+ *
+ * Validates:
+ *   - Caller is clinic owner
+ *   - Clinic has an active paid subscription (not free, not grace_period)
+ *   - Add-on isn't already active
+ *   - Discount code (if provided) is valid, not expired, within usage limit,
+ *     AND applies to this specific add-on type
  */
 export const purchaseAddon = onCall(async (request) => {
   if (!request.auth)
@@ -101,18 +148,161 @@ export const purchaseAddon = onCall(async (request) => {
     discountCode?: string;
   };
 
-  // TODO [CHALLENGE]: Implement add-on purchase (Scenario 3).
-  console.log(
-    'TODO [CHALLENGE]: Implement purchaseAddon for',
-    addonType,
-    'clinic',
-    clinicId,
-    discountCode,
-  );
-  throw new HttpsError(
-    'unimplemented' as any,
-    'TODO [CHALLENGE]: Implement purchaseAddon',
-  );
+  const db = admin.firestore();
+  const stripe = getStripe();
+  const { ADDON_SEATS_BONUS } = await import('./planConfig');
+
+  // --- PHASE 1: Validate everything before touching Stripe ---
+
+  const userDoc = await db.collection('users').doc(request.auth.uid).get();
+  const user = userDoc.data();
+  if (!user || user.role !== 'owner' || user.clinicId !== clinicId) {
+    throw new HttpsError('permission-denied', 'Only clinic owners can manage billing');
+  }
+
+  const subDoc = await db.collection('subscriptions').doc(clinicId).get();
+  const sub = subDoc.data();
+  if (!sub?.stripeSubscriptionId || sub.stripeSubscriptionId === 'sub_test_REPLACE_ME') {
+    throw new HttpsError('failed-precondition', 'A paid subscription is required to add add-ons');
+  }
+  if (sub.plan === 'free') {
+    throw new HttpsError('failed-precondition', 'Upgrade to a paid plan before adding add-ons');
+  }
+  if (sub.status === 'grace_period') {
+    throw new HttpsError('failed-precondition', 'Cannot add add-ons while payment is past due');
+  }
+
+  const existingAddon = await db
+    .collection('addons').doc(clinicId)
+    .collection('items')
+    .where('type', '==', addonType)
+    .where('active', '==', true)
+    .limit(1)
+    .get();
+  if (!existingAddon.empty) {
+    throw new HttpsError('already-exists', 'This add-on is already active');
+  }
+
+  // Validate discount code if provided (read-only check — no writes yet)
+  let discountRef: admin.firestore.DocumentReference | null = null;
+  let discountData: admin.firestore.DocumentData | null = null;
+  let stripeCouponId: string | undefined;
+
+  if (discountCode) {
+    const discountSnap = await db
+      .collection('discounts')
+      .where('code', '==', discountCode)
+      .limit(1)
+      .get();
+
+    if (discountSnap.empty) {
+      throw new HttpsError('not-found', `Discount code "${discountCode}" not found`);
+    }
+
+    discountRef = discountSnap.docs[0].ref;
+    discountData = discountSnap.docs[0].data();
+
+    const validUntil = discountData.validUntil?.toDate?.() ?? new Date(0);
+    if (validUntil <= new Date()) {
+      throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has expired`);
+    }
+    if (discountData.usedCount >= discountData.usageLimit) {
+      throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has reached its usage limit`);
+    }
+
+    const appliesToThisAddon =
+      discountData.appliesToAddons === 'all' ||
+      (Array.isArray(discountData.appliesToAddons) && discountData.appliesToAddons.includes(addonType));
+
+    if (!appliesToThisAddon) {
+      throw new HttpsError(
+        'failed-precondition',
+        `Discount "${discountCode}" does not apply to ${addonType}.` +
+        (discountData.appliesToBase ? ' This code only applies to base plan pricing.' : ''),
+      );
+    }
+
+    // Create Stripe coupon
+    const coupon = await stripe.coupons.create({
+      percent_off: discountData.percentOff,
+      duration: 'repeating',
+      duration_in_months: 12,
+      name: `${discountCode} - ${discountData.percentOff}% off`,
+    });
+    stripeCouponId = coupon.id;
+  }
+
+  // --- PHASE 2: Stripe-first — create subscription item ---
+  const subscriptionItem = await stripe.subscriptionItems.create({
+    subscription: sub.stripeSubscriptionId,
+    price: PRICE_IDS[addonType],
+    quantity: 1,
+    ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
+  });
+
+  // --- PHASE 3: Firestore-second — write addon record + increment discount usage ---
+  const addonRef = db
+    .collection('addons').doc(clinicId)
+    .collection('items').doc();
+
+  try {
+    await db.runTransaction(async (tx) => {
+      // Re-check discount usage inside transaction to prevent concurrent over-use
+      if (discountRef && discountData) {
+        const freshDiscount = await tx.get(discountRef);
+        const fresh = freshDiscount.data();
+        if (fresh && fresh.usedCount >= fresh.usageLimit) {
+          throw new Error('DISCOUNT_EXHAUSTED');
+        }
+        tx.update(discountRef, {
+          usedCount: FieldValue.increment(1),
+        });
+      }
+
+      tx.set(addonRef, {
+        clinicId,
+        type: addonType,
+        price: ADDON_PRICES[addonType],
+        active: true,
+        stripeItemId: subscriptionItem.id,
+        discountCode: discountCode ?? null,
+      });
+
+      const clinicRef = db.collection('clinics').doc(clinicId);
+
+      // Extra Seats addon: increase seat max
+      if (addonType === 'extra_seats') {
+        tx.update(clinicRef, {
+          addons: FieldValue.arrayUnion(addonRef.id),
+          'seats.max': FieldValue.increment(ADDON_SEATS_BONUS),
+        });
+      } else {
+        tx.update(clinicRef, {
+          addons: FieldValue.arrayUnion(addonRef.id),
+        });
+      }
+    });
+  } catch (err: any) {
+    // Compensating rollback: remove the Stripe subscription item
+    console.error('Firestore write failed, rolling back Stripe subscription item:', err);
+    try {
+      await stripe.subscriptionItems.del(subscriptionItem.id, {
+        proration_behavior: 'none',
+      });
+      if (stripeCouponId) {
+        await stripe.coupons.del(stripeCouponId);
+      }
+    } catch (rollbackErr) {
+      console.error('CRITICAL: Stripe rollback failed:', rollbackErr);
+    }
+
+    if (err.message === 'DISCOUNT_EXHAUSTED') {
+      throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has reached its usage limit`);
+    }
+    throw new HttpsError('internal', 'Failed to save add-on. No charges were made.');
+  }
+
+  return { addonId: addonRef.id, stripeItemId: subscriptionItem.id };
 });
 
 /**

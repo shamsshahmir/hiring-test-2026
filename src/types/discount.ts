@@ -19,19 +19,45 @@ export function isDiscountValid(discount: Discount): boolean {
   return expiry > now && discount.usedCount < discount.usageLimit;
 }
 
-// TODO [CHALLENGE]: Implement discount application logic.
-// Given a discount and a line item type, return the discount amount.
-// Rules:
-//   - If appliesToBase is false, discount does NOT apply to base plan
-//   - If appliesToAddons is 'all', discount applies to all add-ons
-//   - If appliesToAddons is an array, only applies to listed addon types
-//   - An expired discount (validUntil < now) must be rejected — even if usedCount < usageLimit
-//   - Existing subscribers with an active Stripe subscription item using the discount:
-//     decide whether to honor until renewal or strip immediately. Document your decision.
+/**
+ * Returns whether a discount applies to a given item type.
+ */
+export function discountAppliesTo(
+  discount: Discount,
+  itemType: 'base' | AddonType,
+): boolean {
+  if (itemType === 'base') {
+    return discount.appliesToBase;
+  }
+  // Add-on item
+  if (discount.appliesToAddons === 'all') return true;
+  return Array.isArray(discount.appliesToAddons) && discount.appliesToAddons.includes(itemType);
+}
+
+/**
+ * Calculates the discounted price for a line item.
+ * Returns the original price if the discount doesn't apply or is invalid.
+ *
+ * Rules:
+ *   - Expired discounts (validUntil < now) are rejected for new purchases
+ *   - appliesToBase: false → discount does NOT apply to base plan
+ *   - appliesToAddons: 'all' → applies to all add-ons
+ *   - appliesToAddons: AddonType[] → only applies to listed addon types
+ *   - Existing subscribers who applied the discount when valid: honored until renewal
+ *     (see DECISIONS.md)
+ */
 export function calculateDiscountedPrice(
-  _basePrice: number,
-  _itemType: 'base' | AddonType,
-  _discount: Discount,
+  basePrice: number,
+  itemType: 'base' | AddonType,
+  discount: Discount,
 ): number {
-  throw new Error('TODO [CHALLENGE]: Implement calculateDiscountedPrice');
+  // Must be valid (not expired, within usage limit)
+  if (!isDiscountValid(discount)) return basePrice;
+
+  // Must apply to this item type
+  if (!discountAppliesTo(discount, itemType)) return basePrice;
+
+  // Apply percentage discount
+  const discountAmount = basePrice * (discount.percentOff / 100);
+  return Math.round((basePrice - discountAmount) * 100) / 100;
 }
