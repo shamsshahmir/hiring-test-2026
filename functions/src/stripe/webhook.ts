@@ -68,9 +68,8 @@ export const handleStripeWebhook = onRequest(async (req, res) => {
       }
 
       case 'customer.subscription.deleted': {
-        // TODO [CHALLENGE]: Handle subscription cancellation.
         const sub = event.data.object as Stripe.Subscription;
-        console.log('TODO [CHALLENGE]: Handle subscription deleted for', sub.id);
+        await handleSubscriptionDeleted(db, sub);
         break;
       }
 
@@ -180,19 +179,33 @@ async function handleSubscriptionUpdated(
   await db.runTransaction(async (tx) => {
     const subRef = db.collection('subscriptions').doc(clinicId);
     const clinicRef = db.collection('clinics').doc(clinicId);
+    const currentSub = await tx.get(subRef);
+    const currentData = currentSub.data();
 
-    // current_period_end can be seconds (number) or already a Date depending on Stripe API version
     const periodEnd = stripeSubscription.current_period_end;
     const periodEndDate = typeof periodEnd === 'number'
       ? new Date(periodEnd > 1e12 ? periodEnd : periodEnd * 1000)
       : new Date();
 
-    tx.update(subRef, {
+    // Only clear pendingDowngrade when the plan actually transitions to the target
+    // (i.e., the scheduled downgrade has completed). Otherwise preserve it —
+    // Stripe fires subscription.updated when creating a schedule, which would
+    // wipe out the pending state we just wrote.
+    const pending = currentData?.pendingDowngrade;
+    const shouldClearPending = pending && pending.targetPlan === newPlan;
+
+    const updateData: Record<string, any> = {
       plan: newPlan,
-      status: stripeSubscription.status === 'active' ? 'active' : subDoc.data()?.status,
+      status: stripeSubscription.status === 'active' ? 'active' : currentData?.status,
       stripeSubscriptionId: stripeSubscription.id,
       currentPeriodEnd: Timestamp.fromDate(periodEndDate),
-    });
+    };
+
+    if (shouldClearPending) {
+      updateData.pendingDowngrade = null;
+    }
+
+    tx.update(subRef, updateData);
 
     tx.update(clinicRef, {
       plan: newPlan,
@@ -221,4 +234,97 @@ async function handlePaymentSucceeded(
     status: 'active',
     gracePeriodEnd: null,
   });
+}
+
+/**
+ * Handles subscription cancellation (e.g., downgrade to free, or failed payment after grace).
+ *
+ * Reverts clinic to free plan. If active seats exceed the free plan limit (1),
+ * auto-deactivates excess staff (keeping owner + most recently joined).
+ */
+async function handleSubscriptionDeleted(
+  db: admin.firestore.Firestore,
+  stripeSubscription: Stripe.Subscription,
+): Promise<void> {
+  // Find clinic by subscription ID or customer ID
+  let snap = await db
+    .collection('subscriptions')
+    .where('stripeSubscriptionId', '==', stripeSubscription.id)
+    .limit(1)
+    .get();
+
+  if (snap.empty) {
+    const customerId = typeof stripeSubscription.customer === 'string'
+      ? stripeSubscription.customer
+      : stripeSubscription.customer?.id;
+    if (customerId) {
+      snap = await db
+        .collection('subscriptions')
+        .where('stripeCustomerId', '==', customerId)
+        .limit(1)
+        .get();
+    }
+  }
+
+  if (snap.empty) {
+    console.warn('No clinic found for deleted subscription', stripeSubscription.id);
+    return;
+  }
+
+  const subDoc = snap.docs[0];
+  const clinicId = subDoc.id;
+  const { PLAN_CONFIG_SERVER } = await import('./planConfig');
+  const freePlanSeats = PLAN_CONFIG_SERVER.free.seats; // 1
+
+  // Auto-deactivate excess seats beyond free plan limit
+  const seatsSnap = await db
+    .collection('seats').doc(clinicId)
+    .collection('members')
+    .where('active', '==', true)
+    .get();
+
+  // Sort: owner first (keep), then by joinedAt ascending (keep earliest, deactivate latest)
+  const activeMembers = seatsSnap.docs
+    .map((d) => ({ ref: d.ref, ...d.data() }))
+    .sort((a: any, b: any) => {
+      if (a.role === 'owner') return -1;
+      if (b.role === 'owner') return 1;
+      // Keep earlier members, deactivate later ones
+      const aTime = a.joinedAt?.toMillis?.() ?? 0;
+      const bTime = b.joinedAt?.toMillis?.() ?? 0;
+      return aTime - bTime;
+    });
+
+  const toDeactivate = activeMembers.slice(freePlanSeats);
+
+  await db.runTransaction(async (tx) => {
+    const subRef = db.collection('subscriptions').doc(clinicId);
+    const clinicRef = db.collection('clinics').doc(clinicId);
+
+    // Revert subscription to free
+    tx.update(subRef, {
+      plan: 'free',
+      status: 'canceled',
+      stripeSubscriptionId: null,
+      pendingDowngrade: null,
+      gracePeriodEnd: null,
+    });
+
+    // Update clinic plan and seats
+    tx.update(clinicRef, {
+      plan: 'free',
+      'seats.max': freePlanSeats,
+      'seats.used': Math.min(activeMembers.length, freePlanSeats),
+    });
+
+    // Deactivate excess staff
+    for (const member of toDeactivate) {
+      tx.update(member.ref, { active: false });
+    }
+  });
+
+  if (toDeactivate.length > 0) {
+    console.log(`Subscription deleted for clinic ${clinicId}: deactivated ${toDeactivate.length} excess seats`);
+  }
+  console.log(`Clinic ${clinicId} reverted to free plan`);
 }

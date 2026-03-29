@@ -5,4 +5,4 @@ admin.initializeApp();
 
 // Export all Cloud Functions
 export { handleStripeWebhook } from './stripe/webhook';
-export { createCheckoutSession, purchaseAddon, initiateDowngrade, removeStaffMember } from './stripe/checkout';
+export { createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember } from './stripe/checkout';

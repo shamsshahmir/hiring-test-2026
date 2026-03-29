@@ -102,12 +102,25 @@ service cloud.firestore {
     match /seats/{clinicId}/members/{userId} {
       allow read: if isAuthenticated() && belongsToClinic(clinicId);
 
-      // TODO [CHALLENGE]: Enforce seat limits on write.
-      // Before allowing a new seat, check:
-      //   1. clinic.seats.used < clinic.seats.max (plan limit + any Extra Seats add-ons)
-      //   2. Subscription status is 'active' (not grace_period or canceled)
-      // This must be enforced here in rules, not just in UI.
-      allow write: if isOwner() && belongsToClinic(clinicId);
+      // Deactivating a seat is always allowed (needed to resolve downgrade conflicts)
+      allow update: if isOwner() && belongsToClinic(clinicId)
+        && request.resource.data.active == false;
+
+      // Adding or activating seats: enforce limits and block during pending downgrade
+      allow create: if isOwner() && belongsToClinic(clinicId)
+        && clinicIsActive(clinicId)
+        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used
+           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max
+        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);
+
+      allow update: if isOwner() && belongsToClinic(clinicId)
+        && request.resource.data.active == true
+        && clinicIsActive(clinicId)
+        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used
+           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max
+        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);
+
+      allow delete: if false;
     }
   }
 }

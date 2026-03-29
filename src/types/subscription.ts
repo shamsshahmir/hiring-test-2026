@@ -22,6 +22,14 @@ export type Addon = {
   stripeItemId: string | null;
 };
 
+export type PendingDowngrade = {
+  targetPlan: Plan;
+  targetSeats: number;
+  conflictingSeats: number;
+  effectiveDate: Timestamp;
+  stripeScheduleId: string | null; // Subscription Schedule ID (paid→paid) for cancellation
+};
+
 export type Subscription = {
   clinicId: string;
   plan: Plan;
@@ -31,6 +39,8 @@ export type Subscription = {
   stripeSubscriptionId: string | null;
   // Set during grace period — how long until plan reverts
   gracePeriodEnd: Timestamp | null;
+  // Set when a downgrade is queued due to seat conflict (Scenario 2)
+  pendingDowngrade: PendingDowngrade | null;
 };
 
 // Plan metadata — source of truth for seat limits and pricing

@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useClinic } from '@/hooks/useClinic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { getClinicAddons, getClinicDiscounts } from '@/services/firestore';
-import { createCheckoutSession } from '@/services/stripe';
+import { createCheckoutSession, initiateDowngrade, cancelPendingDowngrade } from '@/services/stripe';
 import { PlanBadge } from '@/components/PlanBadge';
 import { SeatUsageBar } from '@/components/SeatUsageBar';
 import { DiscountTag } from '@/components/DiscountTag';
@@ -17,11 +17,13 @@ import type { Discount } from '@/types/discount';
 export default function BillingScreen() {
   const { isOwner } = useAuth();
   const { clinic } = useClinic();
-  const { plan, status, config, seatsUsed, seatsMax } = useSubscription();
+  const { plan, status, config, seatsUsed, seatsMax, pendingDowngrade } = useSubscription();
   const [addons, setAddons] = useState<Addon[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [showPlanPicker, setShowPlanPicker] = useState(false);
+  const [showDowngradePicker, setShowDowngradePicker] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
+  const [downgrading, setDowngrading] = useState(false);
 
   useEffect(() => {
     if (!clinic) return;
@@ -64,6 +66,63 @@ export default function BillingScreen() {
     setShowPlanPicker(true);
   }
 
+  const downgradePlans = (['free', 'pro', 'premium'] as const).filter(
+    (p) => PLAN_CONFIG[p].price < PLAN_CONFIG[plan].price,
+  );
+
+  async function handleSelectDowngrade(targetPlan: 'free' | 'pro' | 'premium') {
+    if (!clinic) return;
+    setDowngrading(true);
+    setShowDowngradePicker(false);
+    try {
+      const result = await initiateDowngrade({
+        clinicId: clinic.id,
+        targetPlan,
+      });
+      if (result.strategy === 'immediate') {
+        Alert.alert('Downgraded', `Your plan has been downgraded to ${PLAN_CONFIG[targetPlan].label}.`);
+      } else {
+        Alert.alert(
+          'Downgrade scheduled',
+          `You have ${result.conflictingSeats} more staff than ${PLAN_CONFIG[targetPlan].label} allows (${PLAN_CONFIG[targetPlan].seats} seats). ` +
+          `Your downgrade is scheduled for ${new Date(result.effectiveDate!).toLocaleDateString()}. ` +
+          `Please deactivate excess staff before then.`,
+        );
+      }
+    } catch (err: any) {
+      Alert.alert('Downgrade failed', err.message ?? 'Something went wrong');
+    } finally {
+      setDowngrading(false);
+    }
+  }
+
+  function handleDowngrade() {
+    setShowDowngradePicker(true);
+  }
+
+  async function handleCancelDowngrade() {
+    if (!clinic) return;
+    Alert.alert(
+      'Cancel downgrade?',
+      'Your plan will remain unchanged.',
+      [
+        { text: 'Keep downgrade', style: 'cancel' },
+        {
+          text: 'Cancel downgrade',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await cancelPendingDowngrade(clinic.id);
+              Alert.alert('Cancelled', 'Pending downgrade has been cancelled.');
+            } catch (err: any) {
+              Alert.alert('Error', err.message ?? 'Failed to cancel downgrade');
+            }
+          },
+        },
+      ],
+    );
+  }
+
   function handlePurchaseAddon(addonType: string) {
     // TODO [CHALLENGE]: Call purchaseAddon from stripe.ts
     // Remember: validate applicable discounts server-side (Scenario 3)
@@ -85,6 +144,20 @@ export default function BillingScreen() {
         <Text style={styles.planStatus}>
           Status: <Text style={status === 'active' ? styles.active : styles.inactive}>{status}</Text>
         </Text>
+        {pendingDowngrade && (
+          <View style={styles.downgradeBanner}>
+            <Text style={styles.downgradeText}>
+              Downgrade to {PLAN_CONFIG[pendingDowngrade.targetPlan].label} scheduled for{' '}
+              {pendingDowngrade.effectiveDate?.toDate?.()
+                ? pendingDowngrade.effectiveDate.toDate().toLocaleDateString()
+                : 'end of billing period'}.
+              {'\n'}Please deactivate {pendingDowngrade.conflictingSeats} staff member(s) before then.
+            </Text>
+            <TouchableOpacity style={styles.cancelDowngradeBtn} onPress={handleCancelDowngrade}>
+              <Text style={styles.cancelDowngradeText}>Cancel downgrade</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         {status === 'grace_period' && (
           <View style={styles.warningBanner}>
             <Text style={styles.warningText}>
@@ -171,6 +244,51 @@ export default function BillingScreen() {
           </Text>
         </TouchableOpacity>
       )}
+
+      {/* Downgrade CTA */}
+      {plan !== 'free' && !pendingDowngrade && (
+        <TouchableOpacity
+          style={[styles.downgradeButton, downgrading && { opacity: 0.5 }]}
+          onPress={handleDowngrade}
+          disabled={downgrading}
+        >
+          <Text style={styles.downgradeButtonText}>
+            {downgrading ? 'Processing...' : 'Downgrade plan'}
+          </Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Downgrade plan picker modal */}
+      <Modal visible={showDowngradePicker} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Downgrade to</Text>
+            {downgradePlans.map((p) => (
+              <TouchableOpacity
+                key={p}
+                style={styles.planOption}
+                onPress={() => handleSelectDowngrade(p)}
+              >
+                <View>
+                  <Text style={styles.planOptionName}>{PLAN_CONFIG[p].label}</Text>
+                  <Text style={styles.planOptionSeats}>
+                    {PLAN_CONFIG[p].seats === Infinity ? 'Unlimited' : PLAN_CONFIG[p].seats} seats
+                  </Text>
+                </View>
+                <Text style={[styles.planOptionPrice, { color: '#ef4444' }]}>
+                  {PLAN_CONFIG[p].price === 0 ? 'Free' : `CHF ${PLAN_CONFIG[p].price}/mo`}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setShowDowngradePicker(false)}
+            >
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Plan picker modal */}
       <Modal visible={showPlanPicker} transparent animationType="slide">
@@ -289,4 +407,30 @@ const styles = StyleSheet.create({
   planOptionPrice: { fontSize: 16, fontWeight: '700', color: '#3b82f6' },
   cancelButton: { alignItems: 'center', padding: 14, marginTop: 4 },
   cancelText: { fontSize: 16, color: '#6b7280', fontWeight: '600' },
+  downgradeBanner: {
+    backgroundColor: '#fef3c7',
+    borderRadius: 6,
+    padding: 12,
+  },
+  downgradeText: { fontSize: 13, color: '#92400e', lineHeight: 18 },
+  cancelDowngradeBtn: {
+    marginTop: 8,
+    alignSelf: 'flex-start',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#d97706',
+  },
+  cancelDowngradeText: { fontSize: 13, fontWeight: '600', color: '#d97706' },
+  downgradeButton: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ef4444',
+  },
+  downgradeButtonText: { color: '#ef4444', fontSize: 16, fontWeight: '700' },
 });
