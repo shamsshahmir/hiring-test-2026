@@ -17,7 +17,7 @@ import type { Discount } from '@/types/discount';
 export default function BillingScreen() {
   const { isOwner } = useAuth();
   const { clinic } = useClinic();
-  const { plan, status, config, seatsUsed, seatsMax, pendingDowngrade } = useSubscription();
+  const { plan, status, config, seatsUsed, seatsMax, pendingDowngrade, gracePeriodEnd } = useSubscription();
   const [addons, setAddons] = useState<Addon[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [showPlanPicker, setShowPlanPicker] = useState(false);
@@ -61,8 +61,8 @@ export default function BillingScreen() {
       if (url) {
         await Linking.openURL(url);
       }
-    } catch (err: any) {
-      Alert.alert('Upgrade failed', err.message ?? 'Something went wrong');
+    } catch (err: unknown) {
+      Alert.alert('Upgrade failed', err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setUpgrading(false);
     }
@@ -96,8 +96,8 @@ export default function BillingScreen() {
           `Please deactivate excess staff before then.`,
         );
       }
-    } catch (err: any) {
-      Alert.alert('Downgrade failed', err.message ?? 'Something went wrong');
+    } catch (err: unknown) {
+      Alert.alert('Downgrade failed', err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setDowngrading(false);
     }
@@ -121,8 +121,8 @@ export default function BillingScreen() {
             try {
               await cancelPendingDowngrade(clinic.id);
               Alert.alert('Cancelled', 'Pending downgrade has been cancelled.');
-            } catch (err: any) {
-              Alert.alert('Error', err.message ?? 'Failed to cancel downgrade');
+            } catch (err: unknown) {
+              Alert.alert('Error', err instanceof Error ? err.message : 'Failed to cancel downgrade');
             }
           },
         },
@@ -148,8 +148,8 @@ export default function BillingScreen() {
       });
       Alert.alert('Success', `${ADDON_CONFIG[addonType].label} has been added.`);
       getClinicAddons(clinic.id).then(setAddons);
-    } catch (err: any) {
-      Alert.alert('Purchase failed', err.message ?? 'Something went wrong');
+    } catch (err: unknown) {
+      Alert.alert('Purchase failed', err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setPurchasingAddon(false);
     }
@@ -187,11 +187,13 @@ export default function BillingScreen() {
         {status === 'grace_period' && (
           <View style={styles.warningBanner}>
             <Text style={styles.warningText}>
-              Payment failed. You have a grace period to resolve this.
-              New staff cannot be added until billing is resolved.
+              Payment failed. Your plan will revert to Free
+              {gracePeriodEnd?.toDate
+                ? ` on ${gracePeriodEnd.toDate().toLocaleDateString()}`
+                : ' after the grace period ends'}.
+              {'\n\n'}During this time, existing features remain available but no new staff can be added.
+              Please update your payment method to keep your plan.
             </Text>
-            {/* TODO [CHALLENGE]: Show gracePeriodEnd date from subscription */}
-            {/* TODO [CHALLENGE]: After grace period ends, plan reverts to Free (Scenario 4) */}
           </View>
         )}
       </View>
@@ -254,7 +256,7 @@ export default function BillingScreen() {
           {discounts.map((d) => (
             <DiscountTag key={d.id} discount={d} />
           ))}
-          {/* TODO [CHALLENGE]: Scenario 5 — show expired discount state clearly */}
+          {/* Scenario 5: DiscountTag handles expired/active/exhausted states */}
         </View>
       )}
 

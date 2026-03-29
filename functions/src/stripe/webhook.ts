@@ -61,9 +61,8 @@ export const handleStripeWebhook = onRequest(async (req, res) => {
       }
 
       case 'invoice.payment_failed': {
-        // TODO [CHALLENGE]: Implement Scenario 4 — payment failure → grace period.
         const invoice = event.data.object as Stripe.Invoice;
-        console.log('TODO [CHALLENGE]: Handle payment failure for invoice', invoice.id);
+        await handlePaymentFailed(db, invoice);
         break;
       }
 
@@ -261,6 +260,60 @@ async function handlePaymentSucceeded(
 }
 
 /**
+ * Handles payment failure — enters grace period.
+ *
+ * During grace period (7 days):
+ *   - Existing features remain accessible
+ *   - No new staff can be added (enforced by Firestore rules via clinicIsActive check
+ *     combined with status !== 'active' for seat creation)
+ *   - UI shows warning banner (already implemented in billing.tsx)
+ *
+ * After grace period: Stripe's own retry logic will either succeed (triggering
+ * payment_succeeded → status restored) or give up and cancel the subscription
+ * (triggering subscription.deleted → handleSubscriptionDeleted reverts to free).
+ *
+ * Grace period = 7 days, matching Stripe's Smart Retries window.
+ */
+async function handlePaymentFailed(
+  db: admin.firestore.Firestore,
+  invoice: Stripe.Invoice,
+): Promise<void> {
+  if (!invoice.customer) return;
+
+  const customerId = typeof invoice.customer === 'string'
+    ? invoice.customer
+    : invoice.customer?.id;
+  if (!customerId) return;
+
+  const snap = await db
+    .collection('subscriptions')
+    .where('stripeCustomerId', '==', customerId)
+    .limit(1)
+    .get();
+
+  if (snap.empty) return;
+
+  const subDoc = snap.docs[0];
+  const currentData = subDoc.data();
+
+  // Only enter grace period if currently active (don't re-enter if already in grace)
+  if (currentData.status !== 'active') {
+    console.log(`Clinic ${subDoc.id} already in ${currentData.status}, skipping grace period entry`);
+    return;
+  }
+
+  const gracePeriodEnd = new Date();
+  gracePeriodEnd.setDate(gracePeriodEnd.getDate() + GRACE_PERIOD_DAYS);
+
+  await subDoc.ref.update({
+    status: 'grace_period',
+    gracePeriodEnd: Timestamp.fromDate(gracePeriodEnd),
+  });
+
+  console.log(`Clinic ${subDoc.id} entered grace period until ${gracePeriodEnd.toISOString()}`);
+}
+
+/**
  * Handles subscription cancellation (e.g., downgrade to free, or failed payment after grace).
  *
  * Reverts clinic to free plan. If active seats exceed the free plan limit (1),
@@ -315,12 +368,12 @@ async function handleSubscriptionDeleted(
     .get();
 
   // Sort: owner first (keep), then by joinedAt ascending (keep earliest, deactivate latest)
-  const activeMembers = seatsSnap.docs
-    .map((d) => ({ ref: d.ref, ...d.data() }))
-    .sort((a: any, b: any) => {
+  type SeatMember = { ref: admin.firestore.DocumentReference; role?: string; joinedAt?: { toMillis?: () => number } };
+  const activeMembers: SeatMember[] = seatsSnap.docs
+    .map((d) => ({ ref: d.ref, ...(d.data() as Omit<SeatMember, 'ref'>) }))
+    .sort((a, b) => {
       if (a.role === 'owner') return -1;
       if (b.role === 'owner') return 1;
-      // Keep earlier members, deactivate later ones
       const aTime = a.joinedAt?.toMillis?.() ?? 0;
       const bTime = b.joinedAt?.toMillis?.() ?? 0;
       return aTime - bTime;

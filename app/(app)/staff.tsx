@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useClinic } from '@/hooks/useClinic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { getClinicMembers } from '@/services/firestore';
+import { removeStaffMember } from '@/services/auth';
 import { SeatUsageBar } from '@/components/SeatUsageBar';
 import type { User } from '@/types/user';
 
@@ -48,15 +49,18 @@ export default function StaffScreen() {
         {
           text: 'Remove',
           style: 'destructive',
-          onPress: () => {
-            // TODO [CHALLENGE]: Implement staff removal + session invalidation (Scenario 6).
-            // Steps:
-            //   1. Set seats/{clinicId}/members/{userId}.active = false (server-side)
-            //   2. Update users/{userId}.role (or set clinicId to null)
-            //   3. Invalidate their auth session — call revokeUserSession from auth.ts
-            //   4. Decrement clinic.seats.used
-            // All of this should happen in a single Cloud Function to be atomic.
-            Alert.alert('TODO', 'Implement removeStaffMember Cloud Function (Scenario 6)');
+          onPress: async () => {
+            if (!clinic) return;
+            try {
+              await removeStaffMember(clinic.id, user.id);
+              Alert.alert('Removed', `${user.displayName} has been removed and their session invalidated.`);
+              // Refresh member list
+              getClinicMembers(clinic.id).then((all) =>
+                setMembers(all.filter((u) => u.role === 'staff' || u.role === 'owner')),
+              );
+            } catch (err: unknown) {
+              Alert.alert('Error', err instanceof Error ? err.message : 'Failed to remove staff member');
+            }
           },
         },
       ],

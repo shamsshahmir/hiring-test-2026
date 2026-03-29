@@ -89,7 +89,7 @@ async function seed() {
     plan: 'pro',
     seats: { used: 2, max: 5 },
     addons: ['addon_storage_001'],
-    activeDiscounts: ['WELCOME20'],
+    activeDiscounts: ['WELCOME20', 'ADDONS15'],
     createdAt: admin.firestore.Timestamp.now(),
   });
   console.log('  ✓ Clinic: Alpine Aesthetics Clinic');

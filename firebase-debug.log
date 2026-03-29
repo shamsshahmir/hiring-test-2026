@@ -1404,3 +1404,810 @@ INFO: Detected non-HTTP/2 connection.
 [debug] [2026-03-29T14:21:46.900Z] Mar 29, 2026 7:21:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected non-HTTP/2 connection.
  {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:21:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:22:32.854Z] Mar 29, 2026 7:22:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:22:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:23:32.920Z] Mar 29, 2026 7:23:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:23:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:24:24.601Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:24:25.603Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:24:26.748Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:24:26.748Z] Building nodejs source
+[debug] [2026-03-29T14:24:26.748Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:24:26.752Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:24:26.753Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8188
+
+[debug] [2026-03-29T14:24:27.377Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:24:31.397Z] [worker-pool] Shutting down IDLE worker (us-central1-createCheckoutSession) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-createCheckoutSession)"}}
+[debug] [2026-03-29T14:24:31.397Z] [worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createCheckoutSession"},"extension":{},"message":"[worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.398Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.399Z] [worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-handleStripeWebhook)"}}
+[debug] [2026-03-29T14:24:31.400Z] [worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.401Z] [worker-pool] Shutting down IDLE worker (us-central1-purchaseAddon) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-purchaseAddon)"}}
+[debug] [2026-03-29T14:24:31.401Z] [worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-purchaseAddon"},"extension":{},"message":"[worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: FINISHING"}}
+[debug] [2026-03-29T14:24:31.480Z] [worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: exited"}}
+[debug] [2026-03-29T14:24:31.480Z] [worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-043e85a6-e207-4c27-a62a-d42bee33968a]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.491Z] [worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: exited"}}
+[debug] [2026-03-29T14:24:31.492Z] [worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-f1f55361-ed47-4a33-86f8-0a8185038152]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.493Z] [worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: exited"}}
+[debug] [2026-03-29T14:24:31.493Z] [worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-ab16e417-76e9-403c-b7ee-da56bbc864ba]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.496Z] [worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: exited"}}
+[debug] [2026-03-29T14:24:31.497Z] [worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-cf3ab05b-8d82-475c-ad8c-162113392846]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.499Z] [worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: exited"}}
+[debug] [2026-03-29T14:24:31.499Z] [worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-71267cd3-9fa2-463e-b669-dc6e6c41ec68]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.499Z] [worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: exited"}}
+[debug] [2026-03-29T14:24:31.499Z] [worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-0e6c151e-1bfb-4d85-a5d6-94bcc16a124b]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.500Z] [worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: exited"}}
+[debug] [2026-03-29T14:24:31.500Z] [worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-3deac026-9855-425a-8ce1-b320fbb0b880]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.502Z] [worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: exited"}}
+[debug] [2026-03-29T14:24:31.502Z] [worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-adacc603-f2df-4518-a889-25e35fbbda61]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.502Z] [worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: exited"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b7ef303c-6700-46b9-9270-7aa50a187cc9]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: exited"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-20af74d4-63a6-489c-b46c-688475ca7bf6]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: exited"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1fae2ac4-60de-42db-b3d2-739f05650b41]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.503Z] [worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: exited"}}
+[debug] [2026-03-29T14:24:31.504Z] [worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-420e2803-c93f-488d-bdd2-99bf6b239775]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.505Z] [worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createCheckoutSession"},"extension":{},"message":"[worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: exited"}}
+[debug] [2026-03-29T14:24:31.505Z] [worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-createCheckoutSession"},"extension":{},"message":"[worker-us-central1-createCheckoutSession-ef31b34b-0b78-4a33-9fbc-05f4d0bd2728]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.505Z] [worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: exited"}}
+[debug] [2026-03-29T14:24:31.505Z] [worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b8e6fe9a-0348-4cc6-a74e-f03fc94e6008]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.506Z] [worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: exited"}}
+[debug] [2026-03-29T14:24:31.506Z] [worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-90c4fe00-3b96-49d1-bb11-005b33c876d3]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.507Z] [worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: exited"}}
+[debug] [2026-03-29T14:24:31.507Z] [worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-270cc95f-9117-4162-bba0-81fef4df0005]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.509Z] [worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: exited"}}
+[debug] [2026-03-29T14:24:31.509Z] [worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-e0db2bf9-2967-4165-916f-4fca11cf6c21]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: exited"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9546d656-6ede-4bfe-8a9e-d8429a7897f2]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: exited"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-1c8ddde0-6b3d-4bed-9183-37d7d2911fdf]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: exited"}}
+[debug] [2026-03-29T14:24:31.510Z] [worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-9cae561f-fbd5-4e23-a94c-bd6b49ae05a6]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.511Z] [worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-purchaseAddon"},"extension":{},"message":"[worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: exited"}}
+[debug] [2026-03-29T14:24:31.511Z] [worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-purchaseAddon"},"extension":{},"message":"[worker-us-central1-purchaseAddon-3d4eaa25-b47c-436d-8d44-ebb27cb08fad]: FINISHED"}}
+[debug] [2026-03-29T14:24:31.511Z] [worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: exited"}}
+[debug] [2026-03-29T14:24:31.512Z] [worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-handleStripeWebhook"},"extension":{},"message":"[worker-us-central1-handleStripeWebhook-b85be994-9c21-4faf-b48e-9f414d1d2348]: FINISHED"}}
+[debug] [2026-03-29T14:24:32.933Z] Mar 29, 2026 7:24:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:24:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:25:18.606Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:25:18.887Z] Mar 29, 2026 7:25:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:25:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:25:19.607Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:25:20.199Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:25:20.199Z] Building nodejs source
+[debug] [2026-03-29T14:25:20.199Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:25:20.200Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:25:20.202Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8332
+
+[debug] [2026-03-29T14:25:20.539Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:25:31.776Z] Mar 29, 2026 7:25:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:25:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2026-03-29T14:25:38.000Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules [none]
+[debug] [2026-03-29T14:25:38.000Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Helper functions\n    function isAuthenticated() {\n      return request.auth != null;\n    }\n\n    function getUserRole() {\n      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;\n    }\n\n    function isOwner() {\n      return isAuthenticated() && getUserRole() == 'owner';\n    }\n\n    function isStaff() {\n      return isAuthenticated() && (getUserRole() == 'staff' || getUserRole() == 'owner');\n    }\n\n    function belongsToClinic(clinicId) {\n      return isAuthenticated() &&\n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId == clinicId;\n    }\n\n    function getClinicPlan(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.plan;\n    }\n\n    // Clinic is operational (read access, existing features)\n    function clinicIsActive(clinicId) {\n      let sub = get(/databases/$(database)/documents/subscriptions/$(clinicId)).data;\n      return sub.status == 'active' || sub.status == 'grace_period';\n    }\n\n    // Clinic can make new purchases / add staff (not in grace period)\n    function clinicCanExpand(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.status == 'active';\n    }\n\n    // Check if a user's seat is active (for Scenario 6 — session invalidation)\n    function isSeatActive(clinicId, userId) {\n      return get(/databases/$(database)/documents/seats/$(clinicId)/members/$(userId)).data.active == true;\n    }\n\n    // Clinics collection\n    match /clinics/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      allow create: if isAuthenticated(); // Owner creates clinic on signup\n      allow update: if isOwner() && belongsToClinic(clinicId);\n      allow delete: if false; // Clinics are never deleted via client\n    }\n\n    // Users collection\n    match /users/{userId} {\n      // Users can read their own profile; owners can read their clinic members\n      allow read: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner()\n      );\n      allow create: if isAuthenticated() && request.auth.uid == userId;\n      allow update: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner() // Owner can update roles\n      );\n      allow delete: if false;\n    }\n\n    // Subscriptions\n    match /subscriptions/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions (server-side via admin SDK)\n      // Hint: check request.auth.token.admin or use a service account claim\n      allow write: if false;\n    }\n\n    // Add-ons\n    match /addons/{clinicId}/items/{addonId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions\n      allow write: if false;\n    }\n\n    // Discounts — readable by owners to display in billing UI\n    match /discounts/{discountId} {\n      allow read: if isOwner();\n      // TODO [CHALLENGE]: Discounts are created server-side. Validate expiry and usage limit before applying.\n      allow write: if false;\n    }\n\n    // Appointments\n    match /appointments/{appointmentId} {\n      allow read: if isAuthenticated() && (\n        // Staff and owners see all clinic appointments\n        isStaff() ||\n        // Patients see only their own\n        resource.data.patientId == request.auth.uid\n      );\n\n      allow create: if isStaff(); // Staff/owner books appointments\n\n      // TODO [CHALLENGE]: Add plan-based access control.\n      // Example: Advanced reporting (analytics on appointments) requires Premium or higher.\n      // Extra Storage add-on required to attach files to appointments.\n\n      allow update: if isStaff();\n      allow delete: if isOwner();\n    }\n\n    // Seats\n    match /seats/{clinicId}/members/{userId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n\n      // Deactivating a seat is always allowed (needed to resolve downgrade conflicts)\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == false;\n\n      // Adding or activating seats: enforce limits and block during pending downgrade\n      allow create: if isOwner() && belongsToClinic(clinicId)\n        && clinicIsActive(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == true\n        && clinicIsActive(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow delete: if false;\n    }\n  }\n}\n"}]}}
+[debug] [2026-03-29T14:25:38.006Z] Mar 29, 2026 7:25:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:25:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:25:38.382Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules 200
+[debug] [2026-03-29T14:25:38.382Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"issues":[{"sourcePosition":{"fileName":"security.rules","line":28,"column":14,"currentOffset":722,"endOffset":734},"description":"Unused function: getClinicPlan.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":29,"column":14,"currentOffset":761,"endOffset":763},"description":"Invalid function name: get.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":39,"column":14,"currentOffset":1191,"endOffset":1205},"description":"Unused function: clinicCanExpand.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":40,"column":14,"currentOffset":1232,"endOffset":1234},"description":"Invalid function name: get.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":44,"column":14,"currentOffset":1421,"endOffset":1432},"description":"Unused function: isSeatActive.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":45,"column":14,"currentOffset":1467,"endOffset":1469},"description":"Invalid function name: get.","severity":"WARNING"}]}
+[warn] ⚠  firestore.rules:28:14 - WARNING Unused function: getClinicPlan. 
+[warn] ⚠  firestore.rules:29:14 - WARNING Invalid function name: get. 
+[warn] ⚠  firestore.rules:39:14 - WARNING Unused function: clinicCanExpand. 
+[warn] ⚠  firestore.rules:40:14 - WARNING Invalid function name: get. 
+[warn] ⚠  firestore.rules:44:14 - WARNING Unused function: isSeatActive. 
+[warn] ⚠  firestore.rules:45:14 - WARNING Invalid function name: get. 
+[info] ✔  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2026-03-29T14:25:58.400Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules [none]
+[debug] [2026-03-29T14:25:58.400Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Helper functions\n    function isAuthenticated() {\n      return request.auth != null;\n    }\n\n    function getUserRole() {\n      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;\n    }\n\n    function isOwner() {\n      return isAuthenticated() && getUserRole() == 'owner';\n    }\n\n    function isStaff() {\n      return isAuthenticated() && (getUserRole() == 'staff' || getUserRole() == 'owner');\n    }\n\n    function belongsToClinic(clinicId) {\n      return isAuthenticated() &&\n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId == clinicId;\n    }\n\n    function getClinicPlan(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.plan;\n    }\n\n    // Clinic is operational (read access, existing features)\n    function clinicIsActive(clinicId) {\n      let sub = get(/databases/$(database)/documents/subscriptions/$(clinicId)).data;\n      return sub.status == 'active' || sub.status == 'grace_period';\n    }\n\n    // Clinic can make new purchases / add staff (not in grace period)\n    function clinicCanExpand(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.status == 'active';\n    }\n\n    // Check if a user's seat is active (for Scenario 6 — session invalidation)\n    function isSeatActive(clinicId, userId) {\n      return get(/databases/$(database)/documents/seats/$(clinicId)/members/$(userId)).data.active == true;\n    }\n\n    // Clinics collection\n    match /clinics/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      allow create: if isAuthenticated(); // Owner creates clinic on signup\n      allow update: if isOwner() && belongsToClinic(clinicId);\n      allow delete: if false; // Clinics are never deleted via client\n    }\n\n    // Users collection\n    match /users/{userId} {\n      // Users can read their own profile; owners can read their clinic members\n      allow read: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner()\n      );\n      allow create: if isAuthenticated() && request.auth.uid == userId;\n      allow update: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner() // Owner can update roles\n      );\n      allow delete: if false;\n    }\n\n    // Subscriptions\n    match /subscriptions/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions (server-side via admin SDK)\n      // Hint: check request.auth.token.admin or use a service account claim\n      allow write: if false;\n    }\n\n    // Add-ons\n    match /addons/{clinicId}/items/{addonId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions\n      allow write: if false;\n    }\n\n    // Discounts — readable by owners to display in billing UI\n    match /discounts/{discountId} {\n      allow read: if isOwner();\n      // TODO [CHALLENGE]: Discounts are created server-side. Validate expiry and usage limit before applying.\n      allow write: if false;\n    }\n\n    // Appointments\n    match /appointments/{appointmentId} {\n      allow read: if isAuthenticated() && (\n        // Staff and owners see all clinic appointments\n        isStaff() ||\n        // Patients see only their own\n        resource.data.patientId == request.auth.uid\n      );\n\n      allow create: if isStaff(); // Staff/owner books appointments\n\n      // TODO [CHALLENGE]: Add plan-based access control.\n      // Example: Advanced reporting (analytics on appointments) requires Premium or higher.\n      // Extra Storage add-on required to attach files to appointments.\n\n      allow update: if isStaff();\n      allow delete: if isOwner();\n    }\n\n    // Seats\n    match /seats/{clinicId}/members/{userId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n\n      // Deactivating a seat is always allowed (needed to resolve downgrade conflicts)\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == false;\n\n      // Adding or activating seats: enforce limits, block during grace period and pending downgrade\n      allow create: if isOwner() && belongsToClinic(clinicId)\n        && clinicCanExpand(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == true\n        && clinicCanExpand(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow delete: if false;\n    }\n  }\n}\n"}]}}
+[debug] [2026-03-29T14:25:58.402Z] Mar 29, 2026 7:25:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:25:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:25:58.492Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules 200
+[debug] [2026-03-29T14:25:58.492Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"issues":[{"sourcePosition":{"fileName":"security.rules","line":28,"column":14,"currentOffset":722,"endOffset":734},"description":"Unused function: getClinicPlan.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":29,"column":14,"currentOffset":761,"endOffset":763},"description":"Invalid function name: get.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":33,"column":14,"currentOffset":918,"endOffset":931},"description":"Unused function: clinicIsActive.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":34,"column":17,"currentOffset":961,"endOffset":963},"description":"Invalid function name: get.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":44,"column":14,"currentOffset":1421,"endOffset":1432},"description":"Unused function: isSeatActive.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":45,"column":14,"currentOffset":1467,"endOffset":1469},"description":"Invalid function name: get.","severity":"WARNING"}]}
+[warn] ⚠  firestore.rules:28:14 - WARNING Unused function: getClinicPlan. 
+[warn] ⚠  firestore.rules:29:14 - WARNING Invalid function name: get. 
+[warn] ⚠  firestore.rules:33:14 - WARNING Unused function: clinicIsActive. 
+[warn] ⚠  firestore.rules:34:17 - WARNING Invalid function name: get. 
+[warn] ⚠  firestore.rules:44:14 - WARNING Unused function: isSeatActive. 
+[warn] ⚠  firestore.rules:45:14 - WARNING Invalid function name: get. 
+[info] ✔  firestore: Rules updated. 
+[debug] [2026-03-29T14:26:18.927Z] Mar 29, 2026 7:26:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:26:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2026-03-29T14:26:25.982Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules [none]
+[debug] [2026-03-29T14:26:25.982Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Helper functions\n    function isAuthenticated() {\n      return request.auth != null;\n    }\n\n    function getUserRole() {\n      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;\n    }\n\n    function isOwner() {\n      return isAuthenticated() && getUserRole() == 'owner';\n    }\n\n    function isStaff() {\n      return isAuthenticated() && (getUserRole() == 'staff' || getUserRole() == 'owner');\n    }\n\n    function belongsToClinic(clinicId) {\n      return isAuthenticated() &&\n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId == clinicId;\n    }\n\n    function getClinicPlan(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.plan;\n    }\n\n    // Clinic is operational (read access, existing features)\n    function clinicIsActive(clinicId) {\n      let sub = get(/databases/$(database)/documents/subscriptions/$(clinicId)).data;\n      return sub.status == 'active' || sub.status == 'grace_period';\n    }\n\n    // Clinic can make new purchases / add staff (not in grace period)\n    function clinicCanExpand(clinicId) {\n      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.status == 'active';\n    }\n\n    // Check if a user's seat is active (for Scenario 6 — session invalidation)\n    function isSeatActive(clinicId, userId) {\n      return get(/databases/$(database)/documents/seats/$(clinicId)/members/$(userId)).data.active == true;\n    }\n\n    // Clinics collection\n    match /clinics/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      allow create: if isAuthenticated(); // Owner creates clinic on signup\n      allow update: if isOwner() && belongsToClinic(clinicId);\n      allow delete: if false; // Clinics are never deleted via client\n    }\n\n    // Users collection\n    match /users/{userId} {\n      // Users can read their own profile; owners can read their clinic members\n      allow read: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner()\n      );\n      allow create: if isAuthenticated() && request.auth.uid == userId;\n      allow update: if isAuthenticated() && (\n        request.auth.uid == userId ||\n        isOwner() // Owner can update roles\n      );\n      allow delete: if false;\n    }\n\n    // Subscriptions\n    match /subscriptions/{clinicId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions (server-side via admin SDK)\n      // Hint: check request.auth.token.admin or use a service account claim\n      allow write: if false;\n    }\n\n    // Add-ons\n    match /addons/{clinicId}/items/{addonId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n      // TODO [CHALLENGE]: Only allow writes from Cloud Functions\n      allow write: if false;\n    }\n\n    // Discounts — readable by owners to display in billing UI\n    match /discounts/{discountId} {\n      allow read: if isOwner();\n      // TODO [CHALLENGE]: Discounts are created server-side. Validate expiry and usage limit before applying.\n      allow write: if false;\n    }\n\n    // Appointments\n    match /appointments/{appointmentId} {\n      // Staff must have an active seat to access appointments (Scenario 6)\n      allow read: if isAuthenticated() && (\n        // Staff and owners see all clinic appointments — but only if their seat is active\n        (isStaff() && isSeatActive(\n          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,\n          request.auth.uid\n        )) ||\n        // Patients see only their own\n        resource.data.patientId == request.auth.uid\n      );\n\n      allow create: if isStaff() && isSeatActive(\n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,\n        request.auth.uid\n      );\n\n      allow update: if isStaff() && isSeatActive(\n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,\n        request.auth.uid\n      );\n      allow delete: if isOwner();\n    }\n\n    // Seats\n    match /seats/{clinicId}/members/{userId} {\n      allow read: if isAuthenticated() && belongsToClinic(clinicId);\n\n      // Deactivating a seat is always allowed (needed to resolve downgrade conflicts)\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == false;\n\n      // Adding or activating seats: enforce limits, block during grace period and pending downgrade\n      allow create: if isOwner() && belongsToClinic(clinicId)\n        && clinicCanExpand(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow update: if isOwner() && belongsToClinic(clinicId)\n        && request.resource.data.active == true\n        && clinicCanExpand(clinicId)\n        && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used\n           < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max\n        && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);\n\n      allow delete: if false;\n    }\n  }\n}\n"}]}}
+[debug] [2026-03-29T14:26:25.983Z] Mar 29, 2026 7:26:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:26:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:26:26.082Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules 200
+[debug] [2026-03-29T14:26:26.082Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/clinic-test-local:securityRules {"issues":[{"sourcePosition":{"fileName":"security.rules","line":28,"column":14,"currentOffset":722,"endOffset":734},"description":"Unused function: getClinicPlan.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":29,"column":14,"currentOffset":761,"endOffset":763},"description":"Invalid function name: get.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":33,"column":14,"currentOffset":918,"endOffset":931},"description":"Unused function: clinicIsActive.","severity":"WARNING"},{"sourcePosition":{"fileName":"security.rules","line":34,"column":17,"currentOffset":961,"endOffset":963},"description":"Invalid function name: get.","severity":"WARNING"}]}
+[warn] ⚠  firestore.rules:28:14 - WARNING Unused function: getClinicPlan. 
+[warn] ⚠  firestore.rules:29:14 - WARNING Invalid function name: get. 
+[warn] ⚠  firestore.rules:33:14 - WARNING Unused function: clinicIsActive. 
+[warn] ⚠  firestore.rules:34:17 - WARNING Invalid function name: get. 
+[info] ✔  firestore: Rules updated. 
+[debug] [2026-03-29T14:27:18.938Z] Mar 29, 2026 7:27:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:27:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:28:01.157Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:28:02.160Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:28:03.212Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:28:03.212Z] Building nodejs source
+[debug] [2026-03-29T14:28:03.212Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:28:03.213Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:28:03.214Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8492
+
+[debug] [2026-03-29T14:28:03.746Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2026-03-29T14:28:04.892Z] Mar 29, 2026 7:28:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:28:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:29:04.931Z] Mar 29, 2026 7:29:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:29:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:30:04.945Z] Mar 29, 2026 7:30:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:30:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:03.407Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:31:04.408Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:31:05.181Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:31:05.181Z] Building nodejs source
+[debug] [2026-03-29T14:31:05.181Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:31:05.183Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:31:05.184Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[debug] [2026-03-29T14:31:05.186Z] Mar 29, 2026 7:31:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:31:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[info] Serving at port 8401
+
+[debug] [2026-03-29T14:31:05.737Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:32:04.998Z] Mar 29, 2026 7:32:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:32:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:32:50.898Z] Mar 29, 2026 7:32:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:32:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:33:50.938Z] Mar 29, 2026 7:33:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:33:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:34:50.955Z] Mar 29, 2026 7:34:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:34:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:35:50.992Z] Mar 29, 2026 7:35:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:35:50 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:36:29.894Z] Mar 29, 2026 7:36:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:36:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:36:51.006Z] Mar 29, 2026 7:36:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:36:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:37:36.907Z] Mar 29, 2026 7:37:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:37:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:38:36.972Z] Mar 29, 2026 7:38:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:38:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:39:36.985Z] Mar 29, 2026 7:39:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:39:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:40:37.042Z] Mar 29, 2026 7:40:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:40:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:41:37.137Z] Mar 29, 2026 7:41:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:41:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:42:37.240Z] Mar 29, 2026 7:42:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:42:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:43:37.282Z] Mar 29, 2026 7:43:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:43:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:44:37.293Z] Mar 29, 2026 7:44:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:44:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:45:22.948Z] Mar 29, 2026 7:45:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:45:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:46:22.987Z] Mar 29, 2026 7:46:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:46:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:47:22.999Z] Mar 29, 2026 7:47:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:47:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:48:08.956Z] Mar 29, 2026 7:48:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:48:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:49:00.193Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:49:01.195Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:49:02.512Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:49:02.512Z] Building nodejs source
+[debug] [2026-03-29T14:49:02.512Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:49:02.516Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:49:02.519Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8506
+
+[debug] [2026-03-29T14:49:03.129Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:49:09.002Z] Mar 29, 2026 7:49:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:49:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:49:32.706Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:49:33.708Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:49:34.367Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:49:34.367Z] Building nodejs source
+[debug] [2026-03-29T14:49:34.367Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:49:34.368Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:49:34.369Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8400
+
+[debug] [2026-03-29T14:49:34.712Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:50:09.094Z] Mar 29, 2026 7:50:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:50:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:50:44.113Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/checkout.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:50:45.114Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:50:45.685Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:50:45.685Z] Building nodejs source
+[debug] [2026-03-29T14:50:45.685Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:50:45.686Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:50:45.687Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8298
+
+[debug] [2026-03-29T14:50:46.029Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:51:09.107Z] Mar 29, 2026 7:51:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:51:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:52:09.149Z] Mar 29, 2026 7:52:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:52:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:52:31.522Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/src/stripe/webhook.ts changed, reloading triggers"}}
+[debug] [2026-03-29T14:52:32.523Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:52:33.398Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:52:33.399Z] Building nodejs source
+[debug] [2026-03-29T14:52:33.399Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:52:33.399Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:52:33.401Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8982
+
+[debug] [2026-03-29T14:52:33.732Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:53:09.191Z] Mar 29, 2026 7:53:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:53:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:53:11.173Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.174Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/webhook.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.174Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.174Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/planConfig.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.273Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.273Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.273Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/stripe/checkout.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:11.273Z] File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js.map changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/macbookpro/Desktop/hiring-test-2026/functions/lib/index.js.map changed, reloading triggers"}}
+[debug] [2026-03-29T14:53:12.274Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-03-29T14:53:12.850Z] > [functions] package.json contents: {
+  "name": "clinic-billing-functions",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^6.0.0",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
+[debug] [2026-03-29T14:53:12.850Z] Building nodejs source
+[debug] [2026-03-29T14:53:12.850Z] Failed to find version of module node: reached end of search path /Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "20" doesn't match your global version "22". Using node@22 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:53:12.852Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-29T14:53:12.853Z] Found firebase-functions binary at '/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8256
+
+[debug] [2026-03-29T14:53:13.191Z] Got response from /__/functions.yaml {"endpoints":{"handleStripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"handleStripeWebhook"},"createCheckoutSession":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"createCheckoutSession"},"purchaseAddon":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"purchaseAddon"},"initiateDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"initiateDowngrade"},"cancelPendingDowngrade":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"cancelPendingDowngrade"},"removeStaffMember":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"callableTrigger":{},"entryPoint":"removeStaffMember"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] ✔  functions: Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: handleStripeWebhook, createCheckoutSession, purchaseAddon, initiateDowngrade, cancelPendingDowngrade, removeStaffMember."}}
+[debug] [2026-03-29T14:54:09.214Z] Mar 29, 2026 7:54:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:54:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:55:09.249Z] Mar 29, 2026 7:55:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:55:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:55:31.763Z] Mar 29, 2026 7:55:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:55:31 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:56:09.298Z] Mar 29, 2026 7:56:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:56:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:56:38.807Z] Mar 29, 2026 7:56:38 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
+WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:401)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:434)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:56:38 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException\nWARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.\njava.net.SocketException: Connection reset\n\tat java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:401)\n\tat java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:434)\n\tat io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)\n\tat io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)\n\tat io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)\n\tat io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)\n\tat io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\n"}}
+[debug] [2026-03-29T14:56:54.946Z] Mar 29, 2026 7:56:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:56:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:57:54.960Z] Mar 29, 2026 7:57:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:57:57.549Z] Mar 29, 2026 7:57:57 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:57 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:57:59.084Z] Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:57:59.090Z] Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:57:59.106Z] Mar 29, 2026 7:57:59 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException
+WARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:401)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:434)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:59 PM io.netty.channel.DefaultChannelPipeline onUnhandledInboundException\nWARNING: An exceptionCaught() event was fired, and it reached at the tail of the pipeline. It usually means the last handler in the pipeline did not handle the exception.\njava.net.SocketException: Connection reset\n\tat java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:401)\n\tat java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:434)\n\tat io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:255)\n\tat io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)\n\tat io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:356)\n\tat io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:796)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:732)\n\tat io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:658)\n\tat io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\n"}}
+[debug] [2026-03-29T14:57:59.109Z] Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:57:59 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:58:40.912Z] Mar 29, 2026 7:58:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:58:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:59:26.912Z] Mar 29, 2026 7:59:26 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:59:26 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T14:59:40.748Z] [work-queue] {"queuedWork":["/clinic-test-local/us-central1/removeStaffMember-2026-03-29T14:59:40.748Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2026-03-29T14:59:40.748Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/clinic-test-local/us-central1/removeStaffMember-2026-03-29T14:59:40.748Z"],"workRunningCount":1}
+[debug] [2026-03-29T14:59:40.748Z] Accepted request POST /clinic-test-local/us-central1/removeStaffMember --> us-central1-removeStaffMember
+[debug] [2026-03-29T14:59:40.749Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2026-03-29T14:59:40.749Z] [functions] Got req.url=/clinic-test-local/us-central1/removeStaffMember, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/clinic-test-local/us-central1/removeStaffMember, mapping to path=/"}}
+[debug] [2026-03-29T14:59:40.749Z] [worker-pool] Cleaned up workers for us-central1-createCheckoutSession: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-createCheckoutSession: 1 --> 0"}}
+[debug] [2026-03-29T14:59:40.749Z] [worker-pool] Cleaned up workers for us-central1-handleStripeWebhook: 20 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-handleStripeWebhook: 20 --> 0"}}
+[debug] [2026-03-29T14:59:40.749Z] [worker-pool] Cleaned up workers for us-central1-purchaseAddon: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-purchaseAddon: 1 --> 0"}}
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2026-03-29T14:59:40.754Z] [worker-pool] addWorker(us-central1-removeStaffMember) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-removeStaffMember)"}}
+[debug] [2026-03-29T14:59:40.754Z] [worker-pool] Adding worker with key us-central1-removeStaffMember, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-removeStaffMember, total=1"}}
+[debug] [2026-03-29T14:59:41.875Z] [runtime-status] [46988] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2026-03-29T14:59:41.876Z] [runtime-status] [46988] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2026-03-29T14:59:41.876Z] [runtime-status] [46988] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2026-03-29T14:59:41.877Z] [runtime-status] [46988] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2026-03-29T14:59:42.041Z] [runtime-status] [46988] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2026-03-29T14:59:42.043Z] [runtime-status] [46988] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.6.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.6.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2026-03-29T14:59:42.191Z] [runtime-status] [46988] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2026-03-29T14:59:42.192Z] [runtime-status] [46988] initializeApp(DEFAULT) {"storageBucket":"clinic-test-local.appspot.com","databaseURL":"https://clinic-test-local.firebaseio.com","projectId":"clinic-test-local"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] initializeApp(DEFAULT) {\"storageBucket\":\"clinic-test-local.appspot.com\",\"databaseURL\":\"https://clinic-test-local.firebaseio.com\",\"projectId\":\"clinic-test-local\"}"}}
+[debug] [2026-03-29T14:59:42.299Z] [runtime-status] [46988] Functions runtime initialized. {"cwd":"/Users/macbookpro/Desktop/hiring-test-2026/functions","node_version":"22.16.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Functions runtime initialized. {\"cwd\":\"/Users/macbookpro/Desktop/hiring-test-2026/functions\",\"node_version\":\"22.16.0\"}"}}
+[debug] [2026-03-29T14:59:42.299Z] [runtime-status] [46988] Listening to port: /var/folders/th/_phb9kc56txc8pwg2nzlh_180000gn/T/fire_emu_eff9db599d731932.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[runtime-status] [46988] Listening to port: /var/folders/th/_phb9kc56txc8pwg2nzlh_180000gn/T/fire_emu_eff9db599d731932.sock"}}
+[debug] [2026-03-29T14:59:42.375Z] [worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: IDLE"}}
+[debug] [2026-03-29T14:59:42.375Z] [worker-pool] submitRequest(triggerId=us-central1-removeStaffMember) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-removeStaffMember)"}}
+[info] i  functions: Beginning execution of "us-central1-removeStaffMember" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"Beginning execution of \"us-central1-removeStaffMember\""}}
+[debug] [2026-03-29T14:59:42.375Z] [worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: BUSY"}}
+[info] >  {"verifications":{"app":"MISSING","auth":"VALID"},"logging.googleapis.com/labels":{"firebase-log-type":"callable-request-verification"},"severity":"DEBUG","message":"Callable request verification passed"} {"user":{"verifications":{"app":"MISSING","auth":"VALID"},"logging.googleapis.com/labels":{"firebase-log-type":"callable-request-verification"},"severity":"DEBUG","message":"Callable request verification passed"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":">  {\"verifications\":{\"app\":\"MISSING\",\"auth\":\"VALID\"},\"logging.googleapis.com/labels\":{\"firebase-log-type\":\"callable-request-verification\"},\"severity\":\"DEBUG\",\"message\":\"Callable request verification passed\"}"}}
+[debug] [2026-03-29T14:59:42.709Z] Mar 29, 2026 7:59:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 7:59:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[info] >  Staff 6fAj12MfsVBPN15aKAnb59DSg8Vr removed from clinic clinic_alpine_001, tokens revoked {"user":"Staff 6fAj12MfsVBPN15aKAnb59DSg8Vr removed from clinic clinic_alpine_001, tokens revoked","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":">  Staff 6fAj12MfsVBPN15aKAnb59DSg8Vr removed from clinic clinic_alpine_001, tokens revoked"}}
+[debug] [2026-03-29T14:59:42.802Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-removeStaffMember" in 426.994261ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"Finished \"us-central1-removeStaffMember\" in 426.994261ms"}}
+[debug] [2026-03-29T14:59:42.802Z] [worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"[worker-us-central1-removeStaffMember-fd4c929e-4d8b-4e5d-9161-d6d51b7a059e]: IDLE"}}
+[debug] [2026-03-29T14:59:42.802Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2026-03-29T14:59:42.803Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-removeStaffMember"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2026-03-29T14:59:42.803Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2026-03-29T15:00:12.913Z] Mar 29, 2026 8:00:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.837Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.845Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.846Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.846Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.846Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:13.858Z] Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:17.650Z] Mar 29, 2026 8:00:17 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:17 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:18.452Z] Mar 29, 2026 8:00:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:18 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:19.329Z] Mar 29, 2026 8:00:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:20.260Z] Mar 29, 2026 8:00:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:24.077Z] Mar 29, 2026 8:00:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:25.459Z] Mar 29, 2026 8:00:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:47.049Z] Mar 29, 2026 8:00:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:00:47.108Z] Mar 29, 2026 8:00:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:00:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:05.440Z] Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:05.470Z] Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:05.586Z] Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:05 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:06.164Z] Mar 29, 2026 8:01:06 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:06 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:13.174Z] Mar 29, 2026 8:01:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:36.371Z] Mar 29, 2026 8:01:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:36.422Z] Mar 29, 2026 8:01:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:36 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:47.349Z] Mar 29, 2026 8:01:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:48.956Z] Mar 29, 2026 8:01:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:51.147Z] Mar 29, 2026 8:01:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:51.160Z] Mar 29, 2026 8:01:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:51 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:01:52.278Z] Mar 29, 2026 8:01:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:01:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:02:52.291Z] Mar 29, 2026 8:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:02:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:03:37.299Z] Mar 29, 2026 8:03:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:03:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:04:08.158Z] Mar 29, 2026 8:04:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:04:08 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:04:38.200Z] Mar 29, 2026 8:04:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:04:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:05:38.216Z] Mar 29, 2026 8:05:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:05:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:06:23.923Z] Mar 29, 2026 8:06:23 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:06:23 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:07:39.925Z] Mar 29, 2026 8:07:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:07:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:08:39.964Z] Mar 29, 2026 8:08:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:08:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:08:41.944Z] Mar 29, 2026 8:08:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:08:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:09:39.981Z] Mar 29, 2026 8:09:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:09:39 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2026-03-29T15:10:25.944Z] Mar 29, 2026 8:10:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Mar 29, 2026 8:10:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}

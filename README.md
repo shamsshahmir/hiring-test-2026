@@ -40,44 +40,93 @@ The billing system is the interesting part. Clinics subscribe to a base plan, bu
 
 ## Getting started
 
-You need: Node 18+, the Firebase CLI, and Expo CLI.
+### Prerequisites
+
+- Node 18+ (tested on Node 22)
+- Firebase CLI: `npm install -g firebase-tools`
+- Expo CLI: `npm install -g expo-cli`
+- Stripe CLI: [Install from stripe.com/docs/stripe-cli](https://stripe.com/docs/stripe-cli) (needed for webhook testing)
+- Android device or emulator (tested on physical Android device)
+
+### Setup
 
 ```bash
-# Install Firebase CLI if you don't have it
-npm install -g firebase-tools
-
-# Install Expo CLI
-npm install -g expo-cli
-
 # Clone and install
-git clone https://github.com/blackcode-sa/hiring-test-2026
+git clone <your-fork-url>
 cd hiring-test-2026
 npm install
-
-# Copy env and fill in your values
-cp .env.example .env
-# For local dev, EXPO_PUBLIC_USE_EMULATOR=true — no real Firebase project needed.
-# Get Stripe test keys from https://dashboard.stripe.com/test/apikeys
 
 # Install function dependencies
 cd functions && npm install && cd ..
 
-# Start the emulator (Firestore + Auth + Functions on localhost)
-npm run emulator
-
-# In a second terminal: seed the emulator with test data
-npm run seed
-
-# In a third terminal: start the app
-npm start
+# Build Cloud Functions (required before first emulator start)
+cd functions && npm run build && cd ..
 ```
 
-Five minutes, start to finish. If it takes longer, something is wrong — open an issue.
+### Environment
 
-**Test accounts** (all passwords: `test1234`):
-- Owner: `sophie.owner@test.com`
-- Staff: `anna.staff@test.com` / `marc.staff@test.com`
-- Patients: `patient1@test.com` / `patient2@test.com`
+The `.env` file is pre-configured with Stripe test keys and emulator settings. Key settings:
+
+```bash
+# Emulator host — set to your machine's local IP for physical device testing
+# Use 'localhost' for Android emulator, or your LAN IP (e.g., 192.168.x.x) for physical device
+EXPO_PUBLIC_EMULATOR_HOST=192.168.100.21
+
+# Already set to true for local development
+EXPO_PUBLIC_USE_EMULATOR=true
+```
+
+**Physical device setup:** The app connects to Firebase emulators over your local network. Set `EXPO_PUBLIC_EMULATOR_HOST` to your machine's IP address (find with `ipconfig getifaddr en0` on macOS). Both the phone and computer must be on the same WiFi network.
+
+The `firebase.json` is configured with `"host": "0.0.0.0"` on all emulator ports so they accept connections from the local network, not just localhost.
+
+The `google-services.json` contains a valid-format dummy API key for the emulator. No real Firebase project is needed.
+
+### Running
+
+You need **3 terminals** (4 if testing webhooks):
+
+```bash
+# Terminal 1: Start Firebase emulators
+npm run emulator
+
+# Terminal 2: Seed test data (run after emulator is ready)
+npm run seed
+
+# Terminal 3: Start the app
+npx expo run:android
+# Or for development builds:
+npx expo start
+
+# Terminal 4 (optional): Forward Stripe webhooks for end-to-end testing
+stripe listen --forward-to http://localhost:5001/clinic-test-local/us-central1/handleStripeWebhook
+```
+
+**Important:** The emulator persists data across restarts (via `--import/--export-on-exit`). To start fresh, delete the `emulator-data/` directory before starting the emulator.
+
+**Important:** If you re-seed, clear existing auth data first (the seed script doesn't handle existing users):
+```bash
+curl -s -X DELETE "http://localhost:9099/emulator/v1/projects/clinic-test-local/accounts"
+npm run seed
+```
+
+### Test accounts (all passwords: `test1234`)
+
+| Account | Email | Role |
+|---|---|---|
+| Owner | `sophie.owner@test.com` | Clinic owner — manages billing, staff, subscriptions |
+| Staff | `anna.staff@test.com` | Staff member |
+| Staff | `marc.staff@test.com` | Staff member |
+| Patient | `patient1@test.com` | Patient |
+| Patient | `patient2@test.com` | Patient |
+
+### Stripe test card
+
+For Stripe Checkout payments: `4242 4242 4242 4242`, any future expiry, any CVC.
+
+### Emulator UI
+
+Access the Firebase Emulator UI at `http://localhost:4000` to inspect Firestore data, auth users, and function logs.
 
 ---
 
@@ -181,6 +230,58 @@ Pick one. Implement it. Document the trade-offs.
 | README | Can we run it in under 5 minutes? |
 
 We're a small team. Code that's clear and opinionated is more valuable to us than code that's clever and fragile.
+
+---
+
+## Implementation summary
+
+All 6 scenarios are implemented. See `DECISIONS.md` for 37 documented design decisions with trade-off analysis.
+
+### Scenario 1 — Plan Upgrade
+- Client creates Stripe Checkout session via Cloud Function → user pays → webhook updates Firestore
+- Handles `customer.subscription.created` and `customer.subscription.updated` events
+- Discount codes validated server-side, usage deferred to webhook (handles abandoned checkouts)
+
+### Scenario 2 — Downgrade with Seat Conflict
+- **Queued approach:** seat conflict → downgrade scheduled for end of billing period
+- Stripe Subscription Schedules for paid→paid, `cancel_at_period_end` for paid→free
+- Stripe-first, Firestore-second with compensating rollback on failure
+- `pendingDowngrade` stored with `stripeScheduleId` for cancellability
+- Firestore rules block new seats during pending downgrade
+- Auto-deactivation of excess seats when subscription is deleted (owner kept, earliest staff kept)
+- `cancelPendingDowngrade` Cloud Function to undo a queued downgrade
+
+### Scenario 3 — Add-on Purchase with Discounts
+- Server-side discount validation: checks existence, expiry, usage limit, and applicability per item type
+- WELCOME20 (base only) correctly rejected for add-on purchases with clear error message
+- ADDONS15 (expired) rejected with expiry error
+- Stripe-first with compensating rollback (deletes subscription item + coupon on Firestore failure)
+- Discount usage re-checked inside Firestore transaction (prevents concurrent over-use)
+- Extra Seats add-on increments `clinic.seats.max`; webhook accounts for this when syncing
+
+### Scenario 4 — Payment Failure & Grace Period
+- 7-day grace period matching Stripe's Smart Retries window
+- `clinicIsActive` (allows reads during grace) vs `clinicCanExpand` (blocks new seats/add-ons)
+- No cron job needed — Stripe's subscription cancellation triggers cleanup
+- UI shows grace period warning with end date
+
+### Scenario 5 — Expired Discount Code
+- Expired codes rejected server-side for all new purchases
+- Existing subscribers honored until Stripe coupon's `duration_in_months` expires naturally
+- `DiscountTag` shows Active/Expired/Exhausted badges with remaining uses and applicability
+
+### Scenario 6 — Session Invalidation
+- **Combined approach (Option A + B):** token revocation + Firestore rule enforcement
+- `removeStaffMember` Cloud Function: atomic transaction (deactivate seat, clear clinicId, revert to patient, decrement seats.used) + `revokeRefreshTokens`
+- Firestore rules check `isSeatActive()` on appointments — immediate blocking, no 1-hour token window
+- Token revocation failure is non-critical (rules are primary defense)
+
+### Architecture patterns used throughout
+- **Stripe-first, Firestore-second** with compensating rollbacks
+- **Firestore transactions** with re-checks for concurrent request safety
+- **Zero `any` types** — TypeScript strict throughout
+- **Server-side enforcement** for all billing logic (Firestore rules + Cloud Functions)
+- **Defense in depth** for security (rules + token revocation)
 
 ---
 

@@ -47,17 +47,20 @@ export async function refreshAuthToken(): Promise<void> {
   await auth().currentUser?.getIdToken(true);
 }
 
-// TODO [CHALLENGE]: Implement session invalidation for removed staff (Scenario 6).
-// When an owner removes a staff member, their Firebase Auth session on their device
-// is still valid. Options:
-//   A) Revoke refresh tokens server-side (Firebase Admin SDK — requires Cloud Function)
-//   B) Check Firestore on every protected action — if user.active === false, block access
-//   C) Use custom claims to set a 'disabled' flag and check it in Firestore rules
-//
-// Whichever approach you choose, document WHY in DECISIONS.md.
-// The Firestore rule in seats/ is intentionally incomplete — your implementation goes there.
-export async function revokeUserSession(_userId: string): Promise<void> {
-  throw new Error(
-    'TODO [CHALLENGE]: Implement revokeUserSession via Cloud Function',
-  );
+/**
+ * Removes a staff member and revokes their session.
+ * Calls the removeStaffMember Cloud Function which:
+ *   1. Deactivates seat in Firestore (blocks access via rules immediately)
+ *   2. Revokes Firebase Auth refresh tokens (forces re-auth within 1 hour)
+ *   3. Clears user's clinicId and reverts role to patient
+ *
+ * See DECISIONS.md for trade-off analysis (Option A+B combined approach).
+ */
+export async function removeStaffMember(
+  clinicId: string,
+  targetUserId: string,
+): Promise<void> {
+  const functions = (await import('@react-native-firebase/functions')).default;
+  const fn = functions().httpsCallable('removeStaffMember');
+  await fn({ clinicId, targetUserId });
 }

@@ -282,7 +282,7 @@ export const purchaseAddon = onCall(async (request) => {
         });
       }
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     // Compensating rollback: remove the Stripe subscription item
     console.error('Firestore write failed, rolling back Stripe subscription item:', err);
     try {
@@ -296,7 +296,7 @@ export const purchaseAddon = onCall(async (request) => {
       console.error('CRITICAL: Stripe rollback failed:', rollbackErr);
     }
 
-    if (err.message === 'DISCOUNT_EXHAUSTED') {
+    if (err instanceof Error && err.message === 'DISCOUNT_EXHAUSTED') {
       throw new HttpsError('failed-precondition', `Discount code "${discountCode}" has reached its usage limit`);
     }
     throw new HttpsError('internal', 'Failed to save add-on. No charges were made.');
@@ -437,7 +437,7 @@ export const initiateDowngrade = onCall(async (request) => {
         },
       });
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     // Compensating rollback: undo the Stripe changes
     console.error('Firestore write failed, rolling back Stripe:', err);
     try {
@@ -453,7 +453,7 @@ export const initiateDowngrade = onCall(async (request) => {
       // In production: alert ops team, create incident
     }
 
-    if (err.message === 'CONCURRENT_DOWNGRADE') {
+    if (err instanceof Error && err.message === 'CONCURRENT_DOWNGRADE') {
       throw new HttpsError('already-exists', 'A downgrade was just created by another request');
     }
     throw new HttpsError('internal', 'Failed to save downgrade. No changes were made.');
@@ -514,7 +514,16 @@ export const cancelPendingDowngrade = onCall(async (request) => {
 
 /**
  * Removes a staff member and invalidates their session.
- * Must be atomic: seat decrement + role update + session revocation in one operation.
+ *
+ * Defense in depth (Option A + B):
+ *   1. Firestore transaction: deactivate seat, clear clinicId, decrement seats.used
+ *   2. Revoke Firebase Auth refresh tokens (immediate, but tokens valid up to 1 hour)
+ *   3. Firestore rules check seat.active on every protected operation (catches the 1-hour window)
+ *
+ * This combination ensures:
+ *   - Immediate blocking for most operations (Firestore rules check active flag)
+ *   - Token revocation forces re-auth within 1 hour (catches any cached-token edge cases)
+ *   - No custom claims needed (simpler, no propagation delay)
  */
 export const removeStaffMember = onCall(async (request) => {
   if (!request.auth)
@@ -525,15 +534,62 @@ export const removeStaffMember = onCall(async (request) => {
     targetUserId: string;
   };
 
-  // TODO [CHALLENGE]: Implement staff removal + session invalidation (Scenario 6).
-  console.log(
-    'TODO [CHALLENGE]: Implement removeStaffMember for',
-    targetUserId,
-    'in clinic',
-    clinicId,
-  );
-  throw new HttpsError(
-    'unimplemented' as any,
-    'TODO [CHALLENGE]: Implement removeStaffMember',
-  );
+  const db = admin.firestore();
+
+  // Verify caller is owner of this clinic
+  const callerDoc = await db.collection('users').doc(request.auth.uid).get();
+  const caller = callerDoc.data();
+  if (!caller || caller.role !== 'owner' || caller.clinicId !== clinicId) {
+    throw new HttpsError('permission-denied', 'Only clinic owners can remove staff');
+  }
+
+  // Verify target is a staff member (not the owner) of this clinic
+  const targetDoc = await db.collection('users').doc(targetUserId).get();
+  const target = targetDoc.data();
+  if (!target || target.clinicId !== clinicId) {
+    throw new HttpsError('not-found', 'User is not a member of this clinic');
+  }
+  if (target.role === 'owner') {
+    throw new HttpsError('failed-precondition', 'Cannot remove the clinic owner');
+  }
+
+  // Verify the seat exists and is active
+  const seatRef = db.collection('seats').doc(clinicId).collection('members').doc(targetUserId);
+  const seatDoc = await seatRef.get();
+  if (!seatDoc.exists || !seatDoc.data()?.active) {
+    throw new HttpsError('not-found', 'Staff member seat is not active');
+  }
+
+  // Phase 1: Atomic Firestore update
+  await db.runTransaction(async (tx) => {
+    const clinicRef = db.collection('clinics').doc(clinicId);
+    const userRef = db.collection('users').doc(targetUserId);
+
+    // Deactivate seat
+    tx.update(seatRef, { active: false });
+
+    // Clear user's clinic association and revert to patient role
+    tx.update(userRef, {
+      clinicId: null,
+      role: 'patient',
+    });
+
+    // Decrement seat count
+    tx.update(clinicRef, {
+      'seats.used': FieldValue.increment(-1),
+    });
+  });
+
+  // Phase 2: Revoke Firebase Auth refresh tokens
+  // This invalidates ALL active sessions for the user within ~1 hour.
+  // Combined with Firestore rules checking seat.active, access is blocked immediately.
+  try {
+    await admin.auth().revokeRefreshTokens(targetUserId);
+  } catch (err) {
+    // Token revocation failure is not critical — Firestore rules still block access
+    console.error('Token revocation failed (Firestore rules still enforce):', err);
+  }
+
+  console.log(`Staff ${targetUserId} removed from clinic ${clinicId}, tokens revoked`);
+  return { success: true };
 });

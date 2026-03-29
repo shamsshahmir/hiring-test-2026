@@ -12,7 +12,9 @@ export function useSubscription() {
   const seatsUsed = clinic?.seats.used ?? 0;
   const seatsMax = clinic?.seats.max ?? config.seats;
   const seatsAvailable = seatsMax === Infinity ? Infinity : seatsMax - seatsUsed;
-  const pendingDowngrade: PendingDowngrade | null = (subscription as any)?.pendingDowngrade ?? null;
+  const pendingDowngrade: PendingDowngrade | null = subscription?.pendingDowngrade ?? null;
+
+  const gracePeriodEnd = subscription?.gracePeriodEnd ?? null;
 
   return {
     plan,
@@ -22,6 +24,7 @@ export function useSubscription() {
     seatsMax,
     seatsAvailable,
     pendingDowngrade,
+    gracePeriodEnd,
     isActive: subscription?.status === 'active',
     isGracePeriod: subscription?.status === 'grace_period',
     canAddStaff: seatsAvailable > 0 && subscription?.status === 'active' && !pendingDowngrade,

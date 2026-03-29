@@ -29,9 +29,20 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.plan;
     }
 
+    // Clinic is operational (read access, existing features)
     function clinicIsActive(clinicId) {
       let sub = get(/databases/$(database)/documents/subscriptions/$(clinicId)).data;
       return sub.status == 'active' || sub.status == 'grace_period';
+    }
+
+    // Clinic can make new purchases / add staff (not in grace period)
+    function clinicCanExpand(clinicId) {
+      return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.status == 'active';
+    }
+
+    // Check if a user's seat is active (for Scenario 6 — session invalidation)
+    function isSeatActive(clinicId, userId) {
+      return get(/databases/$(database)/documents/seats/$(clinicId)/members/$(userId)).data.active == true;
     }
 
     // Clinics collection
@@ -81,20 +92,26 @@ service cloud.firestore {
 
     // Appointments
     match /appointments/{appointmentId} {
+      // Staff must have an active seat to access appointments (Scenario 6)
       allow read: if isAuthenticated() && (
-        // Staff and owners see all clinic appointments
-        isStaff() ||
+        // Staff and owners see all clinic appointments — but only if their seat is active
+        (isStaff() && isSeatActive(
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
+          request.auth.uid
+        )) ||
         // Patients see only their own
         resource.data.patientId == request.auth.uid
       );
 
-      allow create: if isStaff(); // Staff/owner books appointments
+      allow create: if isStaff() && isSeatActive(
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
+        request.auth.uid
+      );
 
-      // TODO [CHALLENGE]: Add plan-based access control.
-      // Example: Advanced reporting (analytics on appointments) requires Premium or higher.
-      // Extra Storage add-on required to attach files to appointments.
-
-      allow update: if isStaff();
+      allow update: if isStaff() && isSeatActive(
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
+        request.auth.uid
+      );
       allow delete: if isOwner();
     }
 
@@ -106,16 +123,16 @@ service cloud.firestore {
       allow update: if isOwner() && belongsToClinic(clinicId)
         && request.resource.data.active == false;
 
-      // Adding or activating seats: enforce limits and block during pending downgrade
+      // Adding or activating seats: enforce limits, block during grace period and pending downgrade
       allow create: if isOwner() && belongsToClinic(clinicId)
-        && clinicIsActive(clinicId)
+        && clinicCanExpand(clinicId)
         && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used
            < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max
         && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);
 
       allow update: if isOwner() && belongsToClinic(clinicId)
         && request.resource.data.active == true
-        && clinicIsActive(clinicId)
+        && clinicCanExpand(clinicId)
         && get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.used
            < get(/databases/$(database)/documents/clinics/$(clinicId)).data.seats.max
         && !(get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.pendingDowngrade != null);

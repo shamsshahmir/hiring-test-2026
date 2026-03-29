@@ -207,3 +207,92 @@
 **Why:** Adding a subscription item (add-on purchase) triggers `customer.subscription.updated`. If the webhook blindly set `seats.max = planConfig.seats`, it would overwrite the Extra Seats bonus that was just applied by the `purchaseAddon` function. By reading the actual subscription items from Stripe, the webhook always reflects the true seat entitlement.
 
 **Trade-off:** The webhook now depends on recognizing the Extra Seats price ID. If the price ID changes in Stripe, the webhook would under-count seats. This is mitigated by the same `PRICE_IDS` map used throughout the codebase.
+
+---
+
+## Scenario 4 — Payment Failure & Grace Period
+
+### Decision: 7-day grace period matching Stripe's Smart Retries window
+
+**Choice:** Grace period is 7 days from the first `invoice.payment_failed` event.
+
+**Why:** Stripe's Smart Retries automatically retry failed payments over ~7 days using ML to pick optimal retry times. Setting our grace period to match means: by the time our grace period ends, Stripe has either recovered the payment (triggering `payment_succeeded` → status restored) or given up and canceled the subscription (triggering `subscription.deleted` → revert to free). There's no gap where we'd need to manually cancel.
+
+**Trade-off:** 7 days is generous. Some systems use 3 days. But shorter grace periods risk canceling subscriptions that Stripe would have recovered via Smart Retries, leading to unnecessary churn and re-subscription friction.
+
+### Decision: Grace period only entered from active status
+
+**Choice:** The `handlePaymentFailed` handler only transitions from `active` → `grace_period`. If the subscription is already in `grace_period` (repeated failures), it doesn't re-enter or extend the grace.
+
+**Why:** Extending the grace period on every retry failure would create an indefinite grace state. The 7-day window is absolute from the first failure. Stripe's own retry logic runs within this window. If all retries fail, Stripe cancels the subscription, which triggers our `handleSubscriptionDeleted` cleanup.
+
+### Decision: `clinicCanExpand` vs `clinicIsActive` in Firestore rules
+
+**Choice:** Two separate helper functions in Firestore rules:
+- `clinicIsActive()` — returns true for `active` OR `grace_period` (used for read access, existing features)
+- `clinicCanExpand()` — returns true for `active` ONLY (used for seat creation, add-on purchases)
+
+**Why:** During grace period, the clinic should retain access to existing features (reading data, using appointments, etc.) but cannot expand (no new staff, no new add-ons). A single boolean couldn't express this distinction. The two functions make the intent clear in the rules.
+
+### Decision: No manual grace period expiry enforcement needed
+
+**Choice:** We don't implement a scheduled Cloud Function to check grace period expiry. Stripe handles it.
+
+**Why:** When Stripe gives up retrying, it cancels the subscription, which fires `customer.subscription.deleted`. Our existing `handleSubscriptionDeleted` handler already reverts the plan to free and deactivates excess seats. Adding a cron job would be redundant and could race with Stripe's own cancellation event.
+
+---
+
+## Scenario 5 — Expired Discount Code
+
+### Decision: Expired discounts honored for existing subscribers until Stripe coupon expires
+
+**Choice:** When a discount code expires (`validUntil < now`), it is rejected for all new purchases. However, existing subscribers who applied the discount when it was valid keep their discounted rate — the Stripe coupon (`duration: 'repeating', duration_in_months: 12`) manages the natural expiry.
+
+**Why:** Stripping a discount mid-cycle would be a surprise price increase. The subscriber entered a contract at the discounted rate. The Stripe coupon's `duration_in_months` is the contractual term — when it expires, the full price applies automatically on the next invoice. No server-side intervention or cron job needed.
+
+**Trade-off:** A subscriber could enjoy up to 12 months of discount even if the code expired after 1 month. This is by design — the code's `validUntil` controls who can apply it, while the coupon's duration controls how long it lasts. These are independent concerns.
+
+### Decision: DiscountTag shows clear expired/exhausted state with context
+
+**Choice:** The `DiscountTag` component shows:
+- Active discounts: green badge, validity date, remaining uses
+- Expired discounts: red "Expired" badge, expiry date, note that existing subscribers are honored
+- Exhausted discounts: red "Exhausted" badge, usage count
+
+**Why:** The billing screen should make discount states unambiguous. An owner seeing "ADDONS15 — Expired" with the note "existing subscriptions with this discount are honored until renewal" knows exactly what's happening. No support ticket needed.
+
+---
+
+## Scenario 6 — Session Invalidation on Staff Removal
+
+### Decision: Combined approach — Option A (token revocation) + Option B (Firestore rules)
+
+**Choice:** When the owner removes a staff member:
+1. Firestore transaction atomically: deactivate seat (`active: false`), clear `clinicId`, revert role to `patient`, decrement `seats.used`
+2. Revoke Firebase Auth refresh tokens via `admin.auth().revokeRefreshTokens(uid)`
+3. Firestore rules check `isSeatActive()` on every protected operation (appointments read/write)
+
+**Why:** Neither approach alone is sufficient:
+- **Option A alone (token revocation):** Firebase Auth tokens are valid for up to 1 hour after revocation. During that window, the removed staff member can still read/write Firestore if rules don't check the seat status.
+- **Option B alone (Firestore rules):** Blocks Firestore operations immediately, but the user's client-side auth state still shows them as logged in. They'd see confusing permission errors rather than being cleanly logged out.
+- **Combined:** Firestore rules provide immediate blocking (within milliseconds of the transaction). Token revocation forces a clean logout within 1 hour. The user experience degrades gracefully — first they lose data access, then the session expires.
+
+**Trade-off:** The combined approach requires maintaining the `isSeatActive()` check in Firestore rules for every protected collection, adding read operations (Firestore document reads for the seat check). In a high-traffic system, this adds latency. For a clinic app with moderate traffic, the extra read is negligible.
+
+### Decision: Option C (custom claims) rejected
+
+**Choice:** We did not use custom claims with a `disabled` flag.
+
+**Why:** Custom claims have a propagation delay — after calling `admin.auth().setCustomUserClaims()`, the client must refresh their ID token to pick up the new claims. This can take up to 1 hour (same as token revocation) and requires the client to cooperate by calling `getIdToken(true)`. Firestore rules checking custom claims would be stale until propagation completes. The seat-based approach gives us immediate enforcement without propagation delays.
+
+### Decision: Token revocation failure is non-critical
+
+**Choice:** If `admin.auth().revokeRefreshTokens()` fails, the error is logged but the function still succeeds.
+
+**Why:** The Firestore transaction (Phase 1) is the critical operation — it immediately blocks access via rules. Token revocation is a secondary defense. If it fails (e.g., auth emulator doesn't support it, network issue), the user's seat is still deactivated in Firestore, so rules block them. The token will eventually expire naturally (1 hour max).
+
+### Decision: Removed staff reverted to patient role, not deleted
+
+**Choice:** When a staff member is removed, their user document is updated to `role: 'patient'`, `clinicId: null`. The user account is not deleted.
+
+**Why:** The user might be a patient at the same clinic or join another clinic later. Deleting their account would destroy their appointment history and require re-registration. Reverting to patient preserves their data while revoking clinic access.
