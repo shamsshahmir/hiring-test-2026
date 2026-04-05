@@ -25,6 +25,10 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId == clinicId;
     }
 
+    function getUserClinicId() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId;
+    }
+
     function getClinicPlan(clinicId) {
       return get(/databases/$(database)/documents/subscriptions/$(clinicId)).data.plan;
     }
@@ -55,15 +59,14 @@ service cloud.firestore {
 
     // Users collection
     match /users/{userId} {
-      // Users can read their own profile; owners can read their clinic members
       allow read: if isAuthenticated() && (
         request.auth.uid == userId ||
-        isOwner()
+        (isOwner() && getUserClinicId() == resource.data.clinicId)
       );
       allow create: if isAuthenticated() && request.auth.uid == userId;
       allow update: if isAuthenticated() && (
         request.auth.uid == userId ||
-        isOwner() // Owner can update roles
+        (isOwner() && getUserClinicId() == resource.data.clinicId)
       );
       allow delete: if false;
     }
@@ -94,25 +97,21 @@ service cloud.firestore {
     match /appointments/{appointmentId} {
       // Staff must have an active seat to access appointments (Scenario 6)
       allow read: if isAuthenticated() && (
-        // Staff and owners see all clinic appointments — but only if their seat is active
-        (isStaff() && isSeatActive(
-          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
-          request.auth.uid
-        )) ||
-        // Patients see only their own
+        (isStaff()
+          && isSeatActive(getUserClinicId(), request.auth.uid)
+          && resource.data.clinicId == getUserClinicId()) ||
         resource.data.patientId == request.auth.uid
       );
 
-      allow create: if isStaff() && isSeatActive(
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
-        request.auth.uid
-      );
+      allow create: if isStaff()
+        && isSeatActive(getUserClinicId(), request.auth.uid)
+        && request.resource.data.clinicId == getUserClinicId();
 
-      allow update: if isStaff() && isSeatActive(
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicId,
-        request.auth.uid
-      );
-      allow delete: if isOwner();
+      allow update: if isStaff()
+        && isSeatActive(getUserClinicId(), request.auth.uid)
+        && resource.data.clinicId == getUserClinicId();
+      allow delete: if isOwner()
+        && resource.data.clinicId == getUserClinicId();
     }
 
     // Seats
